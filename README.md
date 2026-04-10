@@ -45,20 +45,6 @@ This project focuses on:
 
 ---
 
-## 📦 Project Structure
-
-```
-.
-├── app/                # Main React Native application
-├── modules/            # AI-DLC modules (dynamic features)
-├── ai/                 # AI integration layer
-├── sandbox/            # Experimental playground
-├── scripts/            # Dev & automation scripts
-└── README.md
-```
-
----
-
 ## 🧪 What is AI-DLC?
 
 AI-DLC (AI-driven Dynamic Logic Components) is an experimental concept where:
