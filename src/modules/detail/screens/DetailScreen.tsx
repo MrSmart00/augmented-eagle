@@ -2,6 +2,7 @@ import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { useFavorites } from "@/src/shared";
 import { PokemonDetail } from "../components/PokemonDetail";
 import { usePokemonDetail } from "../hooks/usePokemonDetail";
+import { usePokemonFlavorText } from "../hooks/usePokemonFlavorText";
 
 interface DetailScreenProps {
   id: string;
@@ -9,7 +10,9 @@ interface DetailScreenProps {
 
 export function DetailScreen({ id }: DetailScreenProps) {
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { pokemon, isLoading, error } = usePokemonDetail(Number(id));
+  const numericId = Number(id);
+  const { pokemon, isLoading, error } = usePokemonDetail(numericId);
+  const { flavorText, isLoading: isFlavorTextLoading } = usePokemonFlavorText(numericId);
 
   if (isLoading) {
     return (
@@ -32,6 +35,8 @@ export function DetailScreen({ id }: DetailScreenProps) {
       pokemon={pokemon}
       isFavorite={isFavorite(pokemon.id)}
       onToggleFavorite={() => toggleFavorite(pokemon.id)}
+      flavorText={flavorText}
+      isFlavorTextLoading={isFlavorTextLoading}
     />
   );
 }

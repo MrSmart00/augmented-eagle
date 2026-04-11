@@ -1,17 +1,25 @@
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import type { PokemonSummary } from "@/src/shared";
+import type { Pokemon } from "@/src/shared";
 import { typeColors, FavoriteButton } from "@/src/shared";
+import { PokemonPhysicalInfo } from "./PokemonPhysicalInfo";
+import { PokemonAbilities } from "./PokemonAbilities";
+import { PokemonStats } from "./PokemonStats";
+import { PokemonFlavorText } from "./PokemonFlavorText";
 
 interface PokemonDetailProps {
-  pokemon: PokemonSummary;
+  pokemon: Pokemon;
   isFavorite?: boolean;
   onToggleFavorite?: () => void;
+  flavorText?: string | null;
+  isFlavorTextLoading?: boolean;
 }
 
 export function PokemonDetail({
   pokemon,
   isFavorite,
   onToggleFavorite,
+  flavorText,
+  isFlavorTextLoading,
 }: PokemonDetailProps) {
   const imageUri = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`;
   const formattedId = `#${String(pokemon.id).padStart(3, "0")}`;
@@ -40,6 +48,10 @@ export function PokemonDetail({
           </View>
         ))}
       </View>
+      <PokemonFlavorText text={flavorText ?? null} isLoading={isFlavorTextLoading} />
+      <PokemonPhysicalInfo height={pokemon.height} weight={pokemon.weight} />
+      <PokemonAbilities abilities={pokemon.abilities} />
+      <PokemonStats stats={pokemon.stats} />
     </ScrollView>
   );
 }

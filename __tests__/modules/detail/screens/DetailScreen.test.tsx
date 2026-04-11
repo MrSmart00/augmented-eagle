@@ -1,22 +1,45 @@
 import { render, screen } from "@testing-library/react-native";
 import { DetailScreen } from "@/src/modules/detail";
 import { FavoritesProvider } from "@/src/shared";
-import type { PokemonSummary } from "@/src/shared";
+import type { Pokemon } from "@/src/shared";
 
-const mockPokemon: PokemonSummary = {
+const mockPokemon: Pokemon = {
   id: 25,
   name: "Pikachu",
   types: ["electric"],
+  stats: [
+    { name: "hp", baseStat: 35 },
+    { name: "attack", baseStat: 55 },
+    { name: "defense", baseStat: 40 },
+    { name: "special-attack", baseStat: 50 },
+    { name: "special-defense", baseStat: 50 },
+    { name: "speed", baseStat: 90 },
+  ],
+  height: 4,
+  weight: 60,
+  abilities: [
+    { name: "static", isHidden: false },
+    { name: "lightning-rod", isHidden: true },
+  ],
 };
 
-const mockUsePokemonById = {
-  pokemon: mockPokemon as PokemonSummary | null,
+const mockUsePokemonDetail = {
+  pokemon: mockPokemon as Pokemon | null,
   isLoading: false,
   error: null as string | null,
 };
 
+const mockUsePokemonFlavorText = {
+  flavorText: "It keeps its tail raised." as string | null,
+  isLoading: false,
+};
+
 jest.mock("@/src/modules/detail/hooks/usePokemonDetail", () => ({
-  usePokemonDetail: () => mockUsePokemonById,
+  usePokemonDetail: () => mockUsePokemonDetail,
+}));
+
+jest.mock("@/src/modules/detail/hooks/usePokemonFlavorText", () => ({
+  usePokemonFlavorText: () => mockUsePokemonFlavorText,
 }));
 
 const renderWithProvider = (id: string) =>
@@ -28,9 +51,11 @@ const renderWithProvider = (id: string) =>
 
 describe("DetailScreen", () => {
   beforeEach(() => {
-    mockUsePokemonById.pokemon = mockPokemon;
-    mockUsePokemonById.isLoading = false;
-    mockUsePokemonById.error = null;
+    mockUsePokemonDetail.pokemon = mockPokemon;
+    mockUsePokemonDetail.isLoading = false;
+    mockUsePokemonDetail.error = null;
+    mockUsePokemonFlavorText.flavorText = "It keeps its tail raised.";
+    mockUsePokemonFlavorText.isLoading = false;
   });
 
   it("指定IDのポケモン詳細が表示される", () => {
@@ -44,15 +69,15 @@ describe("DetailScreen", () => {
   });
 
   it("ローディング中にActivityIndicatorが表示される", () => {
-    mockUsePokemonById.isLoading = true;
-    mockUsePokemonById.pokemon = null;
+    mockUsePokemonDetail.isLoading = true;
+    mockUsePokemonDetail.pokemon = null;
     renderWithProvider("25");
     expect(screen.getByTestId("loading-indicator")).toBeTruthy();
   });
 
   it("エラー時にエラーメッセージが表示される", () => {
-    mockUsePokemonById.pokemon = null;
-    mockUsePokemonById.error = "Not found";
+    mockUsePokemonDetail.pokemon = null;
+    mockUsePokemonDetail.error = "Not found";
     renderWithProvider("999");
     expect(screen.getByText("ポケモンが見つかりません")).toBeTruthy();
   });
@@ -60,5 +85,21 @@ describe("DetailScreen", () => {
   it("お気に入りボタンが表示される", () => {
     renderWithProvider("25");
     expect(screen.getByTestId("favorite-button")).toBeTruthy();
+  });
+
+  it("ステータスが詳細画面に表示される", () => {
+    renderWithProvider("25");
+    expect(screen.getByText("Base Stats")).toBeTruthy();
+  });
+
+  it("身長と体重が詳細画面に表示される", () => {
+    renderWithProvider("25");
+    expect(screen.getByText("0.4 m")).toBeTruthy();
+    expect(screen.getByText("6.0 kg")).toBeTruthy();
+  });
+
+  it("フレーバーテキストが表示される", () => {
+    renderWithProvider("25");
+    expect(screen.getByText("It keeps its tail raised.")).toBeTruthy();
   });
 });
