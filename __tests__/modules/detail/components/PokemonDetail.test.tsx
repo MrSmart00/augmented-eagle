@@ -1,17 +1,45 @@
 import { render, screen, fireEvent } from "@testing-library/react-native";
 import { PokemonDetail } from "@/src/modules/detail/components/PokemonDetail";
-import type { PokemonSummary } from "@/src/shared";
+import type { Pokemon } from "@/src/shared";
 
-const mockPokemon: PokemonSummary = {
+const mockPokemon: Pokemon = {
   id: 25,
   name: "ピカチュウ",
   types: ["electric"],
+  stats: [
+    { name: "hp", baseStat: 35 },
+    { name: "attack", baseStat: 55 },
+    { name: "defense", baseStat: 40 },
+    { name: "special-attack", baseStat: 50 },
+    { name: "special-defense", baseStat: 50 },
+    { name: "speed", baseStat: 90 },
+  ],
+  height: 4,
+  weight: 60,
+  abilities: [
+    { name: "static", isHidden: false },
+    { name: "lightning-rod", isHidden: true },
+  ],
 };
 
-const multiTypePokemon: PokemonSummary = {
+const multiTypePokemon: Pokemon = {
   id: 6,
   name: "リザードン",
   types: ["fire", "flying"],
+  stats: [
+    { name: "hp", baseStat: 78 },
+    { name: "attack", baseStat: 84 },
+    { name: "defense", baseStat: 78 },
+    { name: "special-attack", baseStat: 109 },
+    { name: "special-defense", baseStat: 85 },
+    { name: "speed", baseStat: 100 },
+  ],
+  height: 17,
+  weight: 905,
+  abilities: [
+    { name: "blaze", isHidden: false },
+    { name: "solar-power", isHidden: true },
+  ],
 };
 
 describe("PokemonDetail", () => {
@@ -69,5 +97,34 @@ describe("PokemonDetail", () => {
   it("isFavoriteが未指定の場合、お気に入りボタンが表示されない", () => {
     render(<PokemonDetail pokemon={mockPokemon} />);
     expect(screen.queryByTestId("favorite-button")).toBeNull();
+  });
+
+  it("身長と体重が表示される", () => {
+    render(<PokemonDetail pokemon={mockPokemon} />);
+    expect(screen.getByText("0.4 m")).toBeTruthy();
+    expect(screen.getByText("6.0 kg")).toBeTruthy();
+  });
+
+  it("とくせいが表示される", () => {
+    render(<PokemonDetail pokemon={mockPokemon} />);
+    expect(screen.getByText("Static")).toBeTruthy();
+    expect(screen.getByText("Lightning-rod (Hidden)")).toBeTruthy();
+  });
+
+  it("ステータスバーが表示される", () => {
+    render(<PokemonDetail pokemon={mockPokemon} />);
+    expect(screen.getByText("Base Stats")).toBeTruthy();
+    expect(screen.getByText("HP")).toBeTruthy();
+    expect(screen.getByText("Attack")).toBeTruthy();
+  });
+
+  it("フレーバーテキストが渡された場合に表示される", () => {
+    render(<PokemonDetail pokemon={mockPokemon} flavorText="でんきを　ためこむ　せいしつ。" />);
+    expect(screen.getByText("でんきを　ためこむ　せいしつ。")).toBeTruthy();
+  });
+
+  it("フレーバーテキストが未指定の場合は表示されない", () => {
+    render(<PokemonDetail pokemon={mockPokemon} />);
+    expect(screen.queryByTestId("flavor-text-loading")).toBeNull();
   });
 });
