@@ -1,13 +1,13 @@
 import { renderHook, waitFor, act } from "@testing-library/react-native";
 import { usePokemonByIds } from "@/src/modules/favorites/hooks/usePokemonByIds";
 import { fetchPokemonById } from "@/src/shared/repository/pokemonApi";
-import type { Pokemon } from "@/src/shared";
+import type { PokemonSummary } from "@/src/shared";
 
 jest.mock("@/src/shared/repository/pokemonApi");
 
 const mockFetch = fetchPokemonById as jest.MockedFunction<typeof fetchPokemonById>;
 
-const mockPokemon: Pokemon[] = [
+const mockPokemon: PokemonSummary[] = [
   { id: 25, name: "Pikachu", types: ["electric"] },
   { id: 1, name: "Bulbasaur", types: ["grass", "poison"] },
 ];
@@ -66,8 +66,8 @@ describe("usePokemonByIds", () => {
   });
 
   it("アンマウント後にデータ取得が完了しても状態が更新されない", async () => {
-    let resolve!: (value: Pokemon) => void;
-    mockFetch.mockReturnValue(new Promise<Pokemon>((r) => { resolve = r; }));
+    let resolve!: (value: PokemonSummary) => void;
+    mockFetch.mockReturnValue(new Promise<PokemonSummary>((r) => { resolve = r; }));
     const { result, unmount } = renderHook(() => usePokemonByIds([25]));
 
     expect(result.current.isLoading).toBe(true);

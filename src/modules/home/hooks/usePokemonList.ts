@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { Pokemon } from "@/src/shared";
+import type { PokemonSummary } from "@/src/shared";
 import { fetchPokemonList } from "../repository/pokemonApi";
 import { toPokemon } from "../domain/pokemonListItem";
 
 const PAGE_SIZE = 20;
 
 export function usePokemonList() {
-  const [pokemon, setPokemon] = useState<Pokemon[]>([]);
+  const [pokemon, setPokemon] = useState<PokemonSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);

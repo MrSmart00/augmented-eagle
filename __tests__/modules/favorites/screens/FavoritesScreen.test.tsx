@@ -1,10 +1,10 @@
 import { render, screen } from "@testing-library/react-native";
 import { FavoritesScreen } from "@/src/modules/favorites";
 import { FavoritesProvider } from "@/src/shared";
-import type { Pokemon } from "@/src/shared";
+import type { PokemonSummary } from "@/src/shared";
 
 const mockUsePokemonByIds = {
-  pokemon: [] as Pokemon[],
+  pokemon: [] as PokemonSummary[],
   isLoading: false,
   error: null as string | null,
 };

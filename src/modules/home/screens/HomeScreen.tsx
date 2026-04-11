@@ -10,7 +10,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
 import { PokemonCard, useFavorites } from "@/src/shared";
-import type { Pokemon } from "@/src/shared";
+import type { PokemonSummary } from "@/src/shared";
 import { useSearch } from "../hooks/useSearch";
 import { usePokemonList } from "../hooks/usePokemonList";
 
@@ -44,7 +44,7 @@ export function HomeScreen() {
     );
   }
 
-  const gridData: (Pokemon | null)[] =
+  const gridData: (PokemonSummary | null)[] =
     filteredItems.length % 2 === 1 ? [...filteredItems, null] : filteredItems;
 
   return (

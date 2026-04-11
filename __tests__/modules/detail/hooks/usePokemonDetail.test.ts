@@ -1,34 +1,48 @@
 import { renderHook, waitFor, act } from "@testing-library/react-native";
-import { usePokemonById } from "@/src/modules/detail/hooks/usePokemonById";
-import { fetchPokemonById } from "@/src/shared/repository/pokemonApi";
+import { usePokemonDetail } from "@/src/modules/detail/hooks/usePokemonDetail";
+import { fetchPokemonDetail } from "@/src/modules/detail/repository/pokemonDetailApi";
 import type { Pokemon } from "@/src/shared";
 
-jest.mock("@/src/shared/repository/pokemonApi");
+jest.mock("@/src/modules/detail/repository/pokemonDetailApi");
 
-const mockFetch = fetchPokemonById as jest.MockedFunction<typeof fetchPokemonById>;
+const mockFetch = fetchPokemonDetail as jest.MockedFunction<typeof fetchPokemonDetail>;
 
 const mockPokemon: Pokemon = {
   id: 25,
   name: "Pikachu",
   types: ["electric"],
+  stats: [
+    { name: "hp", baseStat: 35 },
+    { name: "attack", baseStat: 55 },
+    { name: "defense", baseStat: 40 },
+    { name: "special-attack", baseStat: 50 },
+    { name: "special-defense", baseStat: 50 },
+    { name: "speed", baseStat: 90 },
+  ],
+  height: 4,
+  weight: 60,
+  abilities: [
+    { name: "static", isHidden: false },
+    { name: "lightning-rod", isHidden: true },
+  ],
 };
 
-describe("usePokemonById", () => {
+describe("usePokemonDetail", () => {
   beforeEach(() => {
     mockFetch.mockReset();
   });
 
   it("初期ロード時にisLoadingがtrueになる", () => {
     mockFetch.mockReturnValue(new Promise(() => {}));
-    const { result } = renderHook(() => usePokemonById(25));
+    const { result } = renderHook(() => usePokemonDetail(25));
 
     expect(result.current.isLoading).toBe(true);
     expect(result.current.pokemon).toBeNull();
   });
 
-  it("データ取得後にポケモンが設定される", async () => {
+  it("データ取得後にポケモン詳細が設定される", async () => {
     mockFetch.mockResolvedValueOnce(mockPokemon);
-    const { result } = renderHook(() => usePokemonById(25));
+    const { result } = renderHook(() => usePokemonDetail(25));
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
@@ -40,7 +54,7 @@ describe("usePokemonById", () => {
 
   it("エラー時にerror状態が設定される", async () => {
     mockFetch.mockRejectedValueOnce(new Error("Not found"));
-    const { result } = renderHook(() => usePokemonById(25));
+    const { result } = renderHook(() => usePokemonDetail(25));
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
@@ -52,7 +66,7 @@ describe("usePokemonById", () => {
 
   it("Error以外のエラーでもerror状態が設定される", async () => {
     mockFetch.mockRejectedValueOnce("string error");
-    const { result } = renderHook(() => usePokemonById(25));
+    const { result } = renderHook(() => usePokemonDetail(25));
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
@@ -64,7 +78,7 @@ describe("usePokemonById", () => {
   it("アンマウント後にデータ取得が完了しても状態が更新されない", async () => {
     let resolve!: (value: Pokemon) => void;
     mockFetch.mockReturnValue(new Promise<Pokemon>((r) => { resolve = r; }));
-    const { result, unmount } = renderHook(() => usePokemonById(25));
+    const { result, unmount } = renderHook(() => usePokemonDetail(25));
 
     expect(result.current.isLoading).toBe(true);
     unmount();
@@ -78,7 +92,7 @@ describe("usePokemonById", () => {
   it("IDが変わると再取得する", async () => {
     mockFetch.mockResolvedValueOnce(mockPokemon);
     const { result, rerender } = renderHook(
-      (props: { id: number }) => usePokemonById(props.id),
+      (props: { id: number }) => usePokemonDetail(props.id),
       { initialProps: { id: 25 } }
     );
 
@@ -86,7 +100,12 @@ describe("usePokemonById", () => {
       expect(result.current.isLoading).toBe(false);
     });
 
-    const newPokemon: Pokemon = { id: 1, name: "Bulbasaur", types: ["grass", "poison"] };
+    const newPokemon: Pokemon = {
+      ...mockPokemon,
+      id: 1,
+      name: "Bulbasaur",
+      types: ["grass", "poison"],
+    };
     mockFetch.mockResolvedValueOnce(newPokemon);
     rerender({ id: 1 });
 

@@ -1,10 +1,10 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import type { Pokemon } from "../domain/pokemon";
+import type { PokemonSummary } from "../domain/pokemon";
 import { typeColors } from "../domain/typeColors";
 import { FavoriteButton } from "./FavoriteButton";
 
 interface PokemonCardProps {
-  pokemon: Pokemon;
+  pokemon: PokemonSummary;
   onPress?: () => void;
   isFavorite?: boolean;
   onToggleFavorite?: () => void;
