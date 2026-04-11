@@ -50,9 +50,8 @@ src/
       components/       # UIコンポーネント
       screens/          # 画面コンポーネント
       hooks/            # カスタムフック
-      constants/        # 定数
-      types/            # 型定義
-      data/             # データ
+      domain/           # ドメインモデル・ビジネスルール
+      repository/       # データの取得・永続化
   shared/               # モジュール横断で使う共有コード
     index.ts            # 公開API
 __tests__/
