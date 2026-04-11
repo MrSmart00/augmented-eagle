@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { PokemonSummary } from "@/src/shared";
-import { fetchPokemonList } from "../repository/pokemonApi";
-import { toPokemon } from "../domain/pokemonListItem";
+import { fetchPokemonListGraphQL } from "../repository/pokemonGraphqlApi";
 
 const PAGE_SIZE = 20;
 
 export function usePokemonList() {
+  const { i18n } = useTranslation();
+  const language = i18n.language;
+
   const [pokemon, setPokemon] = useState<PokemonSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -18,9 +21,9 @@ export function usePokemonList() {
   const loadInitial = useCallback(async () => {
     try {
       setError(null);
-      const response = await fetchPokemonList(PAGE_SIZE, 0);
-      setPokemon(response.results.map(toPokemon));
-      setHasMore(response.next !== null);
+      const result = await fetchPokemonListGraphQL(PAGE_SIZE, 0, language);
+      setPokemon(result.pokemon);
+      setHasMore(PAGE_SIZE < result.count);
       offsetRef.current = PAGE_SIZE;
     } catch (e) {
       setError(e instanceof Error ? e.message : "Unknown error");
@@ -28,24 +31,28 @@ export function usePokemonList() {
       setIsLoading(false);
       setIsRefreshing(false);
     }
-  }, []);
+  }, [language]);
 
   const loadMore = useCallback(async () => {
     if (!hasMore || isLoadingMoreRef.current) return;
     isLoadingMoreRef.current = true;
     setIsLoadingMore(true);
     try {
-      const response = await fetchPokemonList(PAGE_SIZE, offsetRef.current);
-      setPokemon((prev) => [...prev, ...response.results.map(toPokemon)]);
-      setHasMore(response.next !== null);
+      const result = await fetchPokemonListGraphQL(
+        PAGE_SIZE,
+        offsetRef.current,
+        language,
+      );
+      setPokemon((prev) => [...prev, ...result.pokemon]);
       offsetRef.current += PAGE_SIZE;
+      setHasMore(offsetRef.current < result.count);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Unknown error");
     } finally {
       setIsLoadingMore(false);
       isLoadingMoreRef.current = false;
     }
-  }, [hasMore]);
+  }, [hasMore, language]);
 
   const refresh = useCallback(async () => {
     setIsRefreshing(true);
