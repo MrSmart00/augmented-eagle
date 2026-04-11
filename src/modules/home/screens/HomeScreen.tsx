@@ -1,5 +1,6 @@
 import { FlatList, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Link } from "expo-router";
 import { PokemonCard } from "../components/PokemonCard";
 import { pokemonSamples } from "../repository/pokemonSamples";
 import type { Pokemon } from "../domain/pokemon";
@@ -17,7 +18,11 @@ export function HomeScreen() {
         keyExtractor={(_item, index) => index.toString()}
         renderItem={({ item }) => (
           <View style={styles.cardWrapper}>
-            {item && <PokemonCard pokemon={item} />}
+            {item && (
+              <Link href={`/detail/${item.id}`} asChild>
+                <PokemonCard pokemon={item} />
+              </Link>
+            )}
           </View>
         )}
         numColumns={2}
