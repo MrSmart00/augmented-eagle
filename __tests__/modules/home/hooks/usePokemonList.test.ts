@@ -1,32 +1,22 @@
 import { renderHook, act, waitFor } from "@testing-library/react-native";
 import { usePokemonList } from "@/src/modules/home/hooks/usePokemonList";
-import { fetchPokemonList } from "@/src/modules/home/repository/pokemonApi";
-import type { PokeApiListResponse } from "@/src/modules/home/domain/pokemonListItem";
+import { fetchPokemonListGraphQL } from "@/src/modules/home/repository/pokemonGraphqlApi";
+import type { PokemonListResult } from "@/src/modules/home/repository/pokemonGraphqlApi";
 
-jest.mock("@/src/modules/home/repository/pokemonApi");
+jest.mock("@/src/modules/home/repository/pokemonGraphqlApi");
 
-const mockFetch = fetchPokemonList as jest.MockedFunction<
-  typeof fetchPokemonList
+const mockFetch = fetchPokemonListGraphQL as jest.MockedFunction<
+  typeof fetchPokemonListGraphQL
 >;
 
 const makePage = (
   offset: number,
-  hasNext: boolean
-): PokeApiListResponse => ({
-  count: 40,
-  next: hasNext
-    ? `https://pokeapi.co/api/v2/pokemon?offset=${offset + 20}&limit=20`
-    : null,
-  previous: offset > 0 ? `https://pokeapi.co/api/v2/pokemon?offset=${offset - 20}&limit=20` : null,
-  results: [
-    {
-      name: `pokemon-${offset + 1}`,
-      url: `https://pokeapi.co/api/v2/pokemon/${offset + 1}/`,
-    },
-    {
-      name: `pokemon-${offset + 2}`,
-      url: `https://pokeapi.co/api/v2/pokemon/${offset + 2}/`,
-    },
+  totalCount: number,
+): PokemonListResult => ({
+  count: totalCount,
+  pokemon: [
+    { id: offset + 1, name: `ポケモン${offset + 1}`, types: ["grass"] },
+    { id: offset + 2, name: `ポケモン${offset + 2}`, types: ["fire"] },
   ],
 });
 
@@ -36,14 +26,14 @@ describe("usePokemonList", () => {
   });
 
   it("初期ロード時にisLoadingがtrueになる", () => {
-    mockFetch.mockReturnValue(new Promise(() => {})); // never resolves
+    mockFetch.mockReturnValue(new Promise(() => {}));
     const { result } = renderHook(() => usePokemonList());
 
     expect(result.current.isLoading).toBe(true);
   });
 
   it("データ取得後にポケモン一覧が設定される", async () => {
-    mockFetch.mockResolvedValueOnce(makePage(0, true));
+    mockFetch.mockResolvedValueOnce(makePage(0, 40));
     const { result } = renderHook(() => usePokemonList());
 
     await waitFor(() => {
@@ -51,19 +41,29 @@ describe("usePokemonList", () => {
     });
 
     expect(result.current.pokemon).toHaveLength(2);
-    expect(result.current.pokemon[0].name).toBe("Pokemon-1");
+    expect(result.current.pokemon[0].name).toBe("ポケモン1");
     expect(result.current.pokemon[0].id).toBe(1);
+    expect(result.current.pokemon[0].types).toEqual(["grass"]);
+  });
+
+  it("言語パラメータがGraphQL関数に渡される", async () => {
+    mockFetch.mockResolvedValueOnce(makePage(0, 40));
+    renderHook(() => usePokemonList());
+
+    await waitFor(() => {
+      expect(mockFetch).toHaveBeenCalledWith(20, 0, "ja");
+    });
   });
 
   it("loadMoreで追加データが追加される", async () => {
-    mockFetch.mockResolvedValueOnce(makePage(0, true));
+    mockFetch.mockResolvedValueOnce(makePage(0, 40));
     const { result } = renderHook(() => usePokemonList());
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
     });
 
-    mockFetch.mockResolvedValueOnce(makePage(20, false));
+    mockFetch.mockResolvedValueOnce(makePage(20, 40));
     await act(async () => {
       result.current.loadMore();
     });
@@ -75,8 +75,8 @@ describe("usePokemonList", () => {
     expect(result.current.pokemon).toHaveLength(4);
   });
 
-  it("nextがnullの場合hasMoreがfalseになる", async () => {
-    mockFetch.mockResolvedValueOnce(makePage(0, false));
+  it("総件数に達した場合hasMoreがfalseになる", async () => {
+    mockFetch.mockResolvedValueOnce(makePage(0, 2));
     const { result } = renderHook(() => usePokemonList());
 
     await waitFor(() => {
@@ -87,7 +87,7 @@ describe("usePokemonList", () => {
   });
 
   it("hasMoreがfalseの場合loadMoreは何もしない", async () => {
-    mockFetch.mockResolvedValueOnce(makePage(0, false));
+    mockFetch.mockResolvedValueOnce(makePage(0, 2));
     const { result } = renderHook(() => usePokemonList());
 
     await waitFor(() => {
@@ -102,14 +102,14 @@ describe("usePokemonList", () => {
   });
 
   it("refreshでデータがリセットされる", async () => {
-    mockFetch.mockResolvedValueOnce(makePage(0, true));
+    mockFetch.mockResolvedValueOnce(makePage(0, 40));
     const { result } = renderHook(() => usePokemonList());
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
     });
 
-    mockFetch.mockResolvedValueOnce(makePage(0, true));
+    mockFetch.mockResolvedValueOnce(makePage(0, 40));
     await act(async () => {
       result.current.refresh();
     });
@@ -120,27 +120,7 @@ describe("usePokemonList", () => {
 
     expect(result.current.pokemon).toHaveLength(2);
     expect(mockFetch).toHaveBeenCalledTimes(2);
-    expect(mockFetch).toHaveBeenLastCalledWith(20, 0);
-  });
-
-  it("loadMoreでError以外のエラーでもerror状態が設定される", async () => {
-    mockFetch.mockResolvedValueOnce(makePage(0, true));
-    const { result } = renderHook(() => usePokemonList());
-
-    await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-    });
-
-    mockFetch.mockRejectedValueOnce("string error");
-    await act(async () => {
-      result.current.loadMore();
-    });
-
-    await waitFor(() => {
-      expect(result.current.isLoadingMore).toBe(false);
-    });
-
-    expect(result.current.error).toBe("Unknown error");
+    expect(mockFetch).toHaveBeenLastCalledWith(20, 0, "ja");
   });
 
   it("エラー時にerror状態が設定される", async () => {
@@ -160,6 +140,26 @@ describe("usePokemonList", () => {
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
+    });
+
+    expect(result.current.error).toBe("Unknown error");
+  });
+
+  it("loadMoreでError以外のエラーでもerror状態が設定される", async () => {
+    mockFetch.mockResolvedValueOnce(makePage(0, 40));
+    const { result } = renderHook(() => usePokemonList());
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    mockFetch.mockRejectedValueOnce("string error");
+    await act(async () => {
+      result.current.loadMore();
+    });
+
+    await waitFor(() => {
+      expect(result.current.isLoadingMore).toBe(false);
     });
 
     expect(result.current.error).toBe("Unknown error");
