@@ -1,5 +1,6 @@
-import { render, screen } from "@testing-library/react-native";
+import { render, screen, fireEvent } from "@testing-library/react-native";
 import { HomeScreen } from "@/src/modules/home";
+import { FavoritesProvider } from "@/src/shared";
 
 jest.mock("expo-router", () => ({
   Link: ({
@@ -15,16 +16,41 @@ jest.mock("expo-router", () => ({
   },
 }));
 
+const renderWithProvider = () =>
+  render(
+    <FavoritesProvider>
+      <HomeScreen />
+    </FavoritesProvider>,
+  );
+
 describe("HomeScreen", () => {
   it("ポケモンカードが表示される", () => {
-    render(<HomeScreen />);
+    renderWithProvider();
     expect(screen.getByText("ピカチュウ")).toBeTruthy();
     expect(screen.getByText("フシギダネ")).toBeTruthy();
   });
 
   it("各カードが詳細画面へのリンクを持つ", () => {
-    render(<HomeScreen />);
+    renderWithProvider();
     expect(screen.getByTestId("link-/detail/25")).toBeTruthy();
     expect(screen.getByTestId("link-/detail/1")).toBeTruthy();
+  });
+
+  it("検索入力フィールドが表示される", () => {
+    renderWithProvider();
+    expect(screen.getByTestId("search-input")).toBeTruthy();
+  });
+
+  it("検索テキスト入力でポケモンがフィルタリングされる", () => {
+    renderWithProvider();
+    fireEvent.changeText(screen.getByTestId("search-input"), "ピカ");
+    expect(screen.getByText("ピカチュウ")).toBeTruthy();
+    expect(screen.queryByText("フシギダネ")).toBeNull();
+  });
+
+  it("各カードにお気に入りボタンが表示される", () => {
+    renderWithProvider();
+    const buttons = screen.getAllByTestId("favorite-button");
+    expect(buttons.length).toBeGreaterThan(0);
   });
 });
