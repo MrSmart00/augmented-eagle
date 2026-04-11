@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react-native";
-import { FavoriteButton } from "@/src/modules/home";
+import { FavoriteButton } from "@/src/shared";
 
 describe("FavoriteButton", () => {
   it("お気に入り状態で塗りつぶしハートが表示される", () => {

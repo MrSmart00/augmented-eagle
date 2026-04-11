@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
-import { PokemonDetail } from "../components/PokemonDetail";
-import { pokemonSamples } from "../repository/pokemonSamples";
+import { PokemonDetail, pokemonSamples, useFavorites } from "@/src/shared";
 
 interface DetailScreenProps {
   id: string;
 }
 
 export function DetailScreen({ id }: DetailScreenProps) {
+  const { isFavorite, toggleFavorite } = useFavorites();
   const pokemon = pokemonSamples.find((p) => p.id === Number(id));
 
   if (!pokemon) {
@@ -17,7 +17,13 @@ export function DetailScreen({ id }: DetailScreenProps) {
     );
   }
 
-  return <PokemonDetail pokemon={pokemon} />;
+  return (
+    <PokemonDetail
+      pokemon={pokemon}
+      isFavorite={isFavorite(pokemon.id)}
+      onToggleFavorite={() => toggleFavorite(pokemon.id)}
+    />
+  );
 }
 
 const styles = StyleSheet.create({

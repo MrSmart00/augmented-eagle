@@ -1,6 +1,6 @@
 import { renderHook, act } from "@testing-library/react-native";
 import { useSearch } from "@/src/modules/home";
-import type { Pokemon } from "@/src/modules/home";
+import type { Pokemon } from "@/src/shared";
 
 const mockPokemon: Pokemon[] = [
   { id: 1, name: "フシギダネ", types: ["grass", "poison"] },

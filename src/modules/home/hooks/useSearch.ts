@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Pokemon } from "../domain/pokemon";
+import type { Pokemon } from "@/src/shared";
 
 export function useSearch(items: Pokemon[]) {
   const [searchText, setSearchText] = useState("");
