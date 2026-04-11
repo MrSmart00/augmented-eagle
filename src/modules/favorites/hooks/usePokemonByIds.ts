@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { PokemonSummary } from "@/src/shared";
 import { fetchPokemonById } from "@/src/shared";
+import { fetchPokemonSpeciesInfo } from "@/src/shared";
 
 export function usePokemonByIds(ids: number[]) {
+  const { i18n } = useTranslation();
+  const language = i18n.language;
   const [pokemon, setPokemon] = useState<PokemonSummary[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -19,7 +23,18 @@ export function usePokemonByIds(ids: number[]) {
     setIsLoading(true);
     setError(null);
 
-    Promise.all(ids.map((id) => fetchPokemonById(id)))
+    Promise.all(
+      ids.map(async (id) => {
+        const [base, species] = await Promise.all([
+          fetchPokemonById(id),
+          fetchPokemonSpeciesInfo(id, language),
+        ]);
+        return {
+          ...base,
+          name: species.localizedName ?? base.name,
+        };
+      }),
+    )
       .then((results) => {
         if (!cancelled) setPokemon(results);
       })
@@ -34,7 +49,7 @@ export function usePokemonByIds(ids: number[]) {
       cancelled = true;
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [idsKey]);
+  }, [idsKey, language]);
 
   return { pokemon, isLoading, error };
 }

@@ -6,6 +6,8 @@ export { PokemonCard } from "./components/PokemonCard";
 export { FavoriteButton } from "./components/FavoriteButton";
 export { typeColors } from "./domain/typeColors";
 export { fetchPokemonById } from "./repository/pokemonApi";
+export { fetchPokemonSpeciesInfo } from "./repository/pokemonSpeciesApi";
+export type { PokemonSpeciesInfo } from "./repository/pokemonSpeciesApi";
 export type {
   Pokemon,
   PokemonSummary,
