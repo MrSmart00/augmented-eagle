@@ -1,22 +1,22 @@
 import { render, screen } from "@testing-library/react-native";
 import { DetailScreen } from "@/src/modules/detail";
 import { FavoritesProvider } from "@/src/shared";
-import type { Pokemon } from "@/src/shared";
+import type { PokemonSummary } from "@/src/shared";
 
-const mockPokemon: Pokemon = {
+const mockPokemon: PokemonSummary = {
   id: 25,
   name: "Pikachu",
   types: ["electric"],
 };
 
 const mockUsePokemonById = {
-  pokemon: mockPokemon as Pokemon | null,
+  pokemon: mockPokemon as PokemonSummary | null,
   isLoading: false,
   error: null as string | null,
 };
 
-jest.mock("@/src/modules/detail/hooks/usePokemonById", () => ({
-  usePokemonById: () => mockUsePokemonById,
+jest.mock("@/src/modules/detail/hooks/usePokemonDetail", () => ({
+  usePokemonDetail: () => mockUsePokemonById,
 }));
 
 const renderWithProvider = (id: string) =>

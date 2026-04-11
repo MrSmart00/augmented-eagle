@@ -2,14 +2,14 @@ import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-nativ
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
 import { PokemonCard, useFavorites } from "@/src/shared";
-import type { Pokemon } from "@/src/shared";
+import type { PokemonSummary } from "@/src/shared";
 import { usePokemonByIds } from "../hooks/usePokemonByIds";
 
 export function FavoritesScreen() {
   const { favoriteIds, isFavorite, toggleFavorite } = useFavorites();
   const { pokemon: favoritePokemon, isLoading } = usePokemonByIds(favoriteIds);
 
-  const gridData: (Pokemon | null)[] =
+  const gridData: (PokemonSummary | null)[] =
     favoritePokemon.length % 2 === 1
       ? [...favoritePokemon, null]
       : favoritePokemon;

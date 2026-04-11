@@ -1,9 +1,9 @@
 import { render, screen, fireEvent } from "@testing-library/react-native";
 import { HomeScreen } from "@/src/modules/home";
 import { FavoritesProvider } from "@/src/shared";
-import type { Pokemon } from "@/src/shared";
+import type { PokemonSummary } from "@/src/shared";
 
-const mockPokemon: Pokemon[] = [
+const mockPokemon: PokemonSummary[] = [
   { id: 1, name: "Bulbasaur", types: [] },
   { id: 4, name: "Charmander", types: [] },
   { id: 25, name: "Pikachu", types: [] },

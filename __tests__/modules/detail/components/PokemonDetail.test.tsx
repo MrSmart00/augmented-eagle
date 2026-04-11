@@ -1,14 +1,14 @@
 import { render, screen, fireEvent } from "@testing-library/react-native";
 import { PokemonDetail } from "@/src/modules/detail/components/PokemonDetail";
-import type { Pokemon } from "@/src/shared";
+import type { PokemonSummary } from "@/src/shared";
 
-const mockPokemon: Pokemon = {
+const mockPokemon: PokemonSummary = {
   id: 25,
   name: "ピカチュウ",
   types: ["electric"],
 };
 
-const multiTypePokemon: Pokemon = {
+const multiTypePokemon: PokemonSummary = {
   id: 6,
   name: "リザードン",
   types: ["fire", "flying"],

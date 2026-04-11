@@ -1,7 +1,7 @@
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { useFavorites } from "@/src/shared";
 import { PokemonDetail } from "../components/PokemonDetail";
-import { usePokemonById } from "../hooks/usePokemonById";
+import { usePokemonDetail } from "../hooks/usePokemonDetail";
 
 interface DetailScreenProps {
   id: string;
@@ -9,7 +9,7 @@ interface DetailScreenProps {
 
 export function DetailScreen({ id }: DetailScreenProps) {
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { pokemon, isLoading, error } = usePokemonById(Number(id));
+  const { pokemon, isLoading, error } = usePokemonDetail(Number(id));
 
   if (isLoading) {
     return (

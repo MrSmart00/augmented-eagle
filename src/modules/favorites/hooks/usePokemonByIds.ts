@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import type { Pokemon } from "@/src/shared";
+import type { PokemonSummary } from "@/src/shared";
 import { fetchPokemonById } from "@/src/shared";
 
 export function usePokemonByIds(ids: number[]) {
-  const [pokemon, setPokemon] = useState<Pokemon[]>([]);
+  const [pokemon, setPokemon] = useState<PokemonSummary[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const idsKey = ids.join(",");

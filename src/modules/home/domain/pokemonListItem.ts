@@ -1,4 +1,4 @@
-import type { Pokemon } from "@/src/shared";
+import type { PokemonSummary } from "@/src/shared";
 
 export function capitalizeName(name: string): string {
   if (name.length === 0) return "";
@@ -22,7 +22,7 @@ export function extractPokemonId(url: string): number {
   return Number(segments[segments.length - 1]);
 }
 
-export function toPokemon(item: PokeApiListItem): Pokemon {
+export function toPokemon(item: PokeApiListItem): PokemonSummary {
   return {
     id: extractPokemonId(item.url),
     name: capitalizeName(item.name),

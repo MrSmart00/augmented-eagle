@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import type { Pokemon } from "@/src/shared";
-import { fetchPokemonById } from "@/src/shared";
+import { fetchPokemonDetail } from "../repository/pokemonDetailApi";
 
-export function usePokemonById(id: number) {
+export function usePokemonDetail(id: number) {
   const [pokemon, setPokemon] = useState<Pokemon | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -12,7 +12,7 @@ export function usePokemonById(id: number) {
     setIsLoading(true);
     setError(null);
 
-    fetchPokemonById(id)
+    fetchPokemonDetail(id)
       .then((data) => {
         if (!cancelled) setPokemon(data);
       })

@@ -1,9 +1,9 @@
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import type { Pokemon } from "@/src/shared";
+import type { PokemonSummary } from "@/src/shared";
 import { typeColors, FavoriteButton } from "@/src/shared";
 
 interface PokemonDetailProps {
-  pokemon: Pokemon;
+  pokemon: PokemonSummary;
   isFavorite?: boolean;
   onToggleFavorite?: () => void;
 }
