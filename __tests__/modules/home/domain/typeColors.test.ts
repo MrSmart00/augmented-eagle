@@ -1,5 +1,5 @@
-import { typeColors } from "@/src/constants/typeColors";
-import type { PokemonType } from "@/src/types/pokemon";
+import { typeColors } from "@/src/modules/home";
+import type { PokemonType } from "@/src/modules/home";
 
 const allTypes: PokemonType[] = [
   "normal",

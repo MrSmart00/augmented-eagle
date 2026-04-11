@@ -1,8 +1,8 @@
 import { FlatList, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { PokemonCard } from "@/src/components/PokemonCard";
-import { pokemonSamples } from "@/src/data/pokemonSamples";
-import type { Pokemon } from "@/src/types/pokemon";
+import { PokemonCard } from "../components/PokemonCard";
+import { pokemonSamples } from "../repository/pokemonSamples";
+import type { Pokemon } from "../domain/pokemon";
 
 const gridData: (Pokemon | null)[] =
   pokemonSamples.length % 2 === 1

@@ -6,4 +6,15 @@ module.exports = defineConfig([
   {
     ignores: ["dist/*"],
   },
+  {
+    files: ["app/**/*.{ts,tsx}", "__tests__/**/*.{ts,tsx}", "src/shared/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": ["error", {
+        patterns: [{
+          group: ["@/src/modules/*/*", "@/src/modules/*/*/**"],
+          message: "モジュール内ファイルへの直接アクセスは禁止です。index.ts経由でimportしてください。",
+        }],
+      }],
+    },
+  },
 ]);

@@ -1,4 +1,4 @@
-import type { PokemonType } from "@/src/types/pokemon";
+import type { PokemonType } from "./pokemon";
 
 export const typeColors: Record<PokemonType, string> = {
   normal: "#A8A77A",
