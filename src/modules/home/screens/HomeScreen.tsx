@@ -1,18 +1,48 @@
-import { FlatList, StyleSheet, TextInput, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
-import {
-  PokemonCard,
-  pokemonSamples,
-  useFavorites,
-} from "@/src/shared";
+import { PokemonCard, useFavorites } from "@/src/shared";
 import type { Pokemon } from "@/src/shared";
 import { useSearch } from "../hooks/useSearch";
+import { usePokemonList } from "../hooks/usePokemonList";
 
 export function HomeScreen() {
-  const { searchText, setSearchText, filteredItems } =
-    useSearch(pokemonSamples);
+  const {
+    pokemon,
+    isLoading,
+    isLoadingMore,
+    isRefreshing,
+    hasMore,
+    error,
+    loadMore,
+    refresh,
+  } = usePokemonList();
+  const { searchText, setSearchText, filteredItems } = useSearch(pokemon);
   const { isFavorite, toggleFavorite } = useFavorites();
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={styles.centered}>
+        <ActivityIndicator testID="loading-indicator" size="large" />
+      </SafeAreaView>
+    );
+  }
+
+  if (error && pokemon.length === 0) {
+    return (
+      <SafeAreaView style={styles.centered}>
+        <Text testID="error-text">{error}</Text>
+      </SafeAreaView>
+    );
+  }
 
   const gridData: (Pokemon | null)[] =
     filteredItems.length % 2 === 1 ? [...filteredItems, null] : filteredItems;
@@ -45,6 +75,21 @@ export function HomeScreen() {
         numColumns={2}
         contentContainerStyle={styles.list}
         columnWrapperStyle={styles.row}
+        onEndReached={() => {
+          if (hasMore) loadMore();
+        }}
+        onEndReachedThreshold={0.5}
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={refresh} />
+        }
+        ListFooterComponent={
+          isLoadingMore ? (
+            <ActivityIndicator
+              testID="loading-more-indicator"
+              style={styles.footer}
+            />
+          ) : null
+        }
       />
     </SafeAreaView>
   );
@@ -54,6 +99,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f5f5f5",
+  },
+  centered: {
+    flex: 1,
+    backgroundColor: "#f5f5f5",
+    justifyContent: "center",
+    alignItems: "center",
   },
   searchInput: {
     marginHorizontal: 16,
@@ -75,5 +126,8 @@ const styles = StyleSheet.create({
   },
   cardWrapper: {
     flex: 1,
+  },
+  footer: {
+    paddingVertical: 16,
   },
 });
