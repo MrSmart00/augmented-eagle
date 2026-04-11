@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from "@testing-library/react-native";
+import { renderHook, waitFor, act } from "@testing-library/react-native";
 import { usePokemonById } from "@/src/modules/detail/hooks/usePokemonById";
 import { fetchPokemonById } from "@/src/shared/repository/pokemonApi";
 import type { Pokemon } from "@/src/shared";
@@ -59,6 +59,20 @@ describe("usePokemonById", () => {
     });
 
     expect(result.current.error).toBe("Unknown error");
+  });
+
+  it("アンマウント後にデータ取得が完了しても状態が更新されない", async () => {
+    let resolve!: (value: Pokemon) => void;
+    mockFetch.mockReturnValue(new Promise<Pokemon>((r) => { resolve = r; }));
+    const { result, unmount } = renderHook(() => usePokemonById(25));
+
+    expect(result.current.isLoading).toBe(true);
+    unmount();
+
+    await act(async () => { resolve(mockPokemon); });
+
+    expect(result.current.pokemon).toBeNull();
+    expect(result.current.isLoading).toBe(true);
   });
 
   it("IDが変わると再取得する", async () => {
