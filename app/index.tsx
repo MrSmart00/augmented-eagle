@@ -1,4 +1,5 @@
 import { FlatList, StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { PokemonCard } from "@/src/components/PokemonCard";
 import { pokemonSamples } from "@/src/data/pokemonSamples";
 import type { Pokemon } from "@/src/types/pokemon";
@@ -10,7 +11,7 @@ const gridData: (Pokemon | null)[] =
 
 export default function Index() {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={gridData}
         keyExtractor={(_item, index) => index.toString()}
@@ -23,7 +24,7 @@ export default function Index() {
         contentContainerStyle={styles.list}
         columnWrapperStyle={styles.row}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -33,7 +34,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
   },
   list: {
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 32,
     gap: 16,
   },
   row: {
