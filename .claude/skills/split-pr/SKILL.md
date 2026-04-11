@@ -53,12 +53,12 @@ argument-hint: [ベースブランチ（省略時はmain）]
 
 ユーザーの承認後、分割案に従ってブランチを作成する。
 
-元のブランチ名をプレフィックスにし、各グループの変更内容を表すサフィックスを付ける。
+CLAUDE.mdの命名規則（`<type>/<kebab-case-description>`）に従い、各グループの変更内容に沿った名前を付ける。
 
-例: 元が `feature/pokemon-list` の場合
-- `feature/pokemon-list-api-client` （API通信部分）
-- `feature/pokemon-list-ui-components` （UI部分）
-- `feature/pokemon-list-tests` （テスト部分）
+例: ポケモン一覧機能の分割の場合
+- `feat/pokemon-list-api-client` （API通信部分）
+- `feat/pokemon-list-ui-components` （UI部分）
+- `test/pokemon-list-tests` （テスト部分）
 
 各分割ブランチについて:
 ```bash

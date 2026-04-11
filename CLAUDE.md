@@ -59,6 +59,9 @@ __tests__/
 - TypeScript strict mode（型の省略禁止）
 - Conventional Commits形式（`feat:`, `fix:`, `test:` 等）
 - 作業は必ずブランチを切ってから行う
+- ブランチ命名規則: `<type>/<kebab-case-description>`
+  - type: Conventional Commitsと同じ（feat, fix, chore, refactor, test, docs 等）
+  - 例: `feat/pokemon-list-screen`, `fix/type-badge-color`, `chore/update-dependencies`
 
 ## コマンド
 
