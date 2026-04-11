@@ -28,15 +28,15 @@ describe("PokemonCard", () => {
     );
   });
 
-  it("タイプバッジが表示される", () => {
+  it("タイプバッジが翻訳されて表示される", () => {
     render(<PokemonCard pokemon={mockPokemon} />);
-    expect(screen.getByText("electric")).toBeTruthy();
+    expect(screen.getByText("types.electric")).toBeTruthy();
   });
 
-  it("複数タイプの場合、全てのバッジが表示される", () => {
+  it("複数タイプの場合、全てのバッジが翻訳されて表示される", () => {
     render(<PokemonCard pokemon={mockMultiTypePokemon} />);
-    expect(screen.getByText("fire")).toBeTruthy();
-    expect(screen.getByText("flying")).toBeTruthy();
+    expect(screen.getByText("types.fire")).toBeTruthy();
+    expect(screen.getByText("types.flying")).toBeTruthy();
   });
 
   it("onPressコールバックが呼ばれる", () => {

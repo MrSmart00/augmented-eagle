@@ -64,15 +64,15 @@ describe("PokemonDetail", () => {
     expect(image.props.source.uri).toContain("25.png");
   });
 
-  it("タイプバッジが表示される", () => {
+  it("タイプバッジが翻訳されて表示される", () => {
     render(<PokemonDetail pokemon={mockPokemon} />);
-    expect(screen.getByText("electric")).toBeTruthy();
+    expect(screen.getByText("types.electric")).toBeTruthy();
   });
 
-  it("複数タイプが全て表示される", () => {
+  it("複数タイプが翻訳されて全て表示される", () => {
     render(<PokemonDetail pokemon={multiTypePokemon} />);
-    expect(screen.getByText("fire")).toBeTruthy();
-    expect(screen.getByText("flying")).toBeTruthy();
+    expect(screen.getByText("types.fire")).toBeTruthy();
+    expect(screen.getByText("types.flying")).toBeTruthy();
   });
 
   it("isFavoriteとonToggleFavoriteが渡された場合、お気に入りボタンが表示される", () => {
