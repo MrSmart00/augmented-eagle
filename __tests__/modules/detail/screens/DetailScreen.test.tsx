@@ -1,6 +1,23 @@
 import { render, screen } from "@testing-library/react-native";
 import { DetailScreen } from "@/src/modules/detail";
 import { FavoritesProvider } from "@/src/shared";
+import type { Pokemon } from "@/src/shared";
+
+const mockPokemon: Pokemon = {
+  id: 25,
+  name: "Pikachu",
+  types: ["electric"],
+};
+
+const mockUsePokemonById = {
+  pokemon: mockPokemon as Pokemon | null,
+  isLoading: false,
+  error: null as string | null,
+};
+
+jest.mock("@/src/shared/hooks/usePokemonById", () => ({
+  usePokemonById: () => mockUsePokemonById,
+}));
 
 const renderWithProvider = (id: string) =>
   render(
@@ -10,9 +27,15 @@ const renderWithProvider = (id: string) =>
   );
 
 describe("DetailScreen", () => {
+  beforeEach(() => {
+    mockUsePokemonById.pokemon = mockPokemon;
+    mockUsePokemonById.isLoading = false;
+    mockUsePokemonById.error = null;
+  });
+
   it("指定IDのポケモン詳細が表示される", () => {
     renderWithProvider("25");
-    expect(screen.getByText("ピカチュウ")).toBeTruthy();
+    expect(screen.getByText("Pikachu")).toBeTruthy();
   });
 
   it("ポケモンのIDが表示される", () => {
@@ -20,7 +43,16 @@ describe("DetailScreen", () => {
     expect(screen.getByText("#025")).toBeTruthy();
   });
 
-  it("存在しないIDの場合エラーメッセージが表示される", () => {
+  it("ローディング中にActivityIndicatorが表示される", () => {
+    mockUsePokemonById.isLoading = true;
+    mockUsePokemonById.pokemon = null;
+    renderWithProvider("25");
+    expect(screen.getByTestId("loading-indicator")).toBeTruthy();
+  });
+
+  it("エラー時にエラーメッセージが表示される", () => {
+    mockUsePokemonById.pokemon = null;
+    mockUsePokemonById.error = "Not found";
     renderWithProvider("999");
     expect(screen.getByText("ポケモンが見つかりません")).toBeTruthy();
   });

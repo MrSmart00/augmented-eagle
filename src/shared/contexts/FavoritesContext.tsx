@@ -1,10 +1,14 @@
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import type { ReactNode } from "react";
+import { Alert } from "react-native";
+
+const MAX_FAVORITES = 5;
 
 interface FavoritesContextValue {
   favoriteIds: number[];
   toggleFavorite: (id: number) => void;
   isFavorite: (id: number) => boolean;
+  isFull: boolean;
 }
 
 const FavoritesContext = createContext<FavoritesContextValue | null>(null);
@@ -13,9 +17,16 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
   const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
 
   const toggleFavorite = useCallback((id: number) => {
-    setFavoriteIds((prev) =>
-      prev.includes(id) ? prev.filter((fid) => fid !== id) : [...prev, id],
-    );
+    setFavoriteIds((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((fid) => fid !== id);
+      }
+      if (prev.length >= MAX_FAVORITES) {
+        Alert.alert("お気に入り上限", "お気に入りは5匹までです");
+        return prev;
+      }
+      return [...prev, id];
+    });
   }, []);
 
   const isFavorite = useCallback(
@@ -23,9 +34,11 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
     [favoriteIds],
   );
 
+  const isFull = favoriteIds.length >= MAX_FAVORITES;
+
   const value = useMemo(
-    () => ({ favoriteIds, toggleFavorite, isFavorite }),
-    [favoriteIds, toggleFavorite, isFavorite],
+    () => ({ favoriteIds, toggleFavorite, isFavorite, isFull }),
+    [favoriteIds, toggleFavorite, isFavorite, isFull],
   );
 
   return (

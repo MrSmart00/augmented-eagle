@@ -1,19 +1,13 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
-import {
-  PokemonCard,
-  pokemonSamples,
-  useFavorites,
-} from "@/src/shared";
+import { PokemonCard, useFavorites } from "@/src/shared";
 import type { Pokemon } from "@/src/shared";
+import { usePokemonByIds } from "@/src/shared/hooks/usePokemonByIds";
 
 export function FavoritesScreen() {
   const { favoriteIds, isFavorite, toggleFavorite } = useFavorites();
-
-  const favoritePokemon = pokemonSamples.filter((p) =>
-    favoriteIds.includes(p.id),
-  );
+  const { pokemon: favoritePokemon, isLoading } = usePokemonByIds(favoriteIds);
 
   const gridData: (Pokemon | null)[] =
     favoritePokemon.length % 2 === 1
@@ -23,7 +17,11 @@ export function FavoritesScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>お気に入り</Text>
-      {favoritePokemon.length === 0 ? (
+      {isLoading ? (
+        <View style={styles.emptyContent}>
+          <ActivityIndicator testID="loading-indicator" size="large" />
+        </View>
+      ) : favoritePokemon.length === 0 ? (
         <View style={styles.emptyContent}>
           <Text style={styles.placeholder}>
             お気に入りのポケモンはまだいません

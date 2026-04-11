@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View } from "react-native";
-import { PokemonDetail, pokemonSamples, useFavorites } from "@/src/shared";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { PokemonDetail, useFavorites } from "@/src/shared";
+import { usePokemonById } from "@/src/shared/hooks/usePokemonById";
 
 interface DetailScreenProps {
   id: string;
@@ -7,11 +8,19 @@ interface DetailScreenProps {
 
 export function DetailScreen({ id }: DetailScreenProps) {
   const { isFavorite, toggleFavorite } = useFavorites();
-  const pokemon = pokemonSamples.find((p) => p.id === Number(id));
+  const { pokemon, isLoading, error } = usePokemonById(Number(id));
 
-  if (!pokemon) {
+  if (isLoading) {
     return (
-      <View style={styles.errorContainer}>
+      <View style={styles.centered}>
+        <ActivityIndicator testID="loading-indicator" size="large" />
+      </View>
+    );
+  }
+
+  if (error || !pokemon) {
+    return (
+      <View style={styles.centered}>
         <Text style={styles.errorText}>ポケモンが見つかりません</Text>
       </View>
     );
@@ -27,7 +36,7 @@ export function DetailScreen({ id }: DetailScreenProps) {
 }
 
 const styles = StyleSheet.create({
-  errorContainer: {
+  centered: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",

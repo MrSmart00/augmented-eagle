@@ -1,6 +1,17 @@
-import { render, screen, fireEvent } from "@testing-library/react-native";
+import { render, screen } from "@testing-library/react-native";
 import { FavoritesScreen } from "@/src/modules/favorites";
 import { FavoritesProvider } from "@/src/shared";
+import type { Pokemon } from "@/src/shared";
+
+const mockUsePokemonByIds = {
+  pokemon: [] as Pokemon[],
+  isLoading: false,
+  error: null as string | null,
+};
+
+jest.mock("@/src/shared/hooks/usePokemonByIds", () => ({
+  usePokemonByIds: () => mockUsePokemonByIds,
+}));
 
 jest.mock("expo-router", () => ({
   Link: ({
@@ -24,6 +35,12 @@ const renderWithProvider = () =>
   );
 
 describe("FavoritesScreen", () => {
+  beforeEach(() => {
+    mockUsePokemonByIds.pokemon = [];
+    mockUsePokemonByIds.isLoading = false;
+    mockUsePokemonByIds.error = null;
+  });
+
   it("お気に入り画面のタイトルが表示される", () => {
     renderWithProvider();
     expect(screen.getByText("お気に入り")).toBeTruthy();
@@ -36,14 +53,17 @@ describe("FavoritesScreen", () => {
     ).toBeTruthy();
   });
 
-  it("お気に入りのポケモンがカードとして表示される", () => {
+  it("ローディング中にActivityIndicatorが表示される", () => {
+    mockUsePokemonByIds.isLoading = true;
     renderWithProvider();
-    // ピカチュウ(id:25)のお気に入りボタンはまだ無いので、
-    // FavoritesScreenには直接お気に入りを追加できない。
-    // 代わりにプレースホルダーが表示されることを確認。
-    expect(screen.queryByText("ピカチュウ")).toBeNull();
-    expect(
-      screen.getByText("お気に入りのポケモンはまだいません"),
-    ).toBeTruthy();
+    expect(screen.getByTestId("loading-indicator")).toBeTruthy();
+  });
+
+  it("お気に入りのポケモンがカードとして表示される", () => {
+    mockUsePokemonByIds.pokemon = [
+      { id: 25, name: "Pikachu", types: ["electric"] },
+    ];
+    renderWithProvider();
+    expect(screen.getByText("Pikachu")).toBeTruthy();
   });
 });
