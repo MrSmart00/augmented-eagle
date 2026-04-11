@@ -1,5 +1,5 @@
 import { HomeScreen } from "@/src/modules/home";
 
-export default function Index() {
+export default function PokedexTab() {
   return <HomeScreen />;
 }
