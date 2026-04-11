@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react-native";
-import { DetailScreen } from "@/src/modules/home";
+import { DetailScreen } from "@/src/modules/detail";
 import { FavoritesProvider } from "@/src/shared";
 
 const renderWithProvider = (id: string) =>
