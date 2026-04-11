@@ -29,8 +29,27 @@ argument-hint: [ベースブランチ（省略時はmain）]
 - 現在のブランチがmain/masterでないこと
 - 未コミットの変更がないこと（あればコミットを促す）
 - リモートにブランチがpush済みか確認する
+- **変更行数が500行を超えていないこと**（以下の手順で確認）:
+  1. 自動生成ファイルを除外した差分のサマリーを取得する:
+     ```bash
+     git diff main...HEAD --stat -- . ':!pnpm-lock.yaml' ':!*.lock' ':!*.snap' ':!coverage/' ':!.expo/'
+     ```
+  2. 末尾サマリー行の insertions + deletions の合計が **500行を超える場合**、変更の概要を表示して**中断する**
+  3. `/split-pr` スキルの利用を案内する
 
-### Step 3: 🚀 リモートへのプッシュ
+### Step 3: 🏷️ ブランチ名の検証
+
+ブランチ名がCLAUDE.mdの命名規則（`<type>/<kebab-case-description>`）に則っているか確認する。
+
+命名規則に則っていない場合（例: `worktree-hazy-noodling-whale`, `my-branch` 等）:
+1. コミット内容を分析し、命名規則に従った適切なブランチ名を生成する
+2. ブランチ名をリネームする:
+   ```bash
+   git branch -m <old-branch-name> <new-branch-name>
+   ```
+3. リネーム後のブランチ名をユーザーに報告してから次のステップに進む
+
+### Step 4: 🚀 リモートへのプッシュ
 
 リモートに未プッシュの場合:
 
@@ -38,7 +57,7 @@ argument-hint: [ベースブランチ（省略時はmain）]
 git push -u origin <current-branch>
 ```
 
-### Step 4: 📝 PRの内容を作成
+### Step 5: 📝 PRの内容を作成
 
 `git log main..HEAD` と `git diff main...HEAD` の内容を分析し、以下を生成する:
 
@@ -66,7 +85,7 @@ git push -u origin <current-branch>
 - 関連するIssueがあれば `closes #N` や `refs #N` で記述
 ```
 
-### Step 5: 🎫 PRの作成
+### Step 6: 🎫 PRの作成
 
 `gh pr create` コマンドでPRを作成する。必ずHEREDOCを使ってbodyを渡すこと:
 
@@ -90,6 +109,6 @@ EOF
 - `$ARGUMENTS` が指定されている場合: そのブランチをベースにする
 - `$ARGUMENTS` が空の場合: `main` をベースにする
 
-### Step 6: ✅ 結果の確認
+### Step 7: ✅ 結果の確認
 
 作成されたPRのURLをユーザーに報告する。
