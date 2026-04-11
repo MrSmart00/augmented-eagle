@@ -1,4 +1,5 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 import type { PokemonSummary } from "../domain/pokemon";
 import { typeColors } from "../domain/typeColors";
 import { FavoriteButton } from "./FavoriteButton";
@@ -16,6 +17,7 @@ export function PokemonCard({
   isFavorite,
   onToggleFavorite,
 }: PokemonCardProps) {
+  const { t } = useTranslation();
   const imageUri = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`;
 
   return (
@@ -37,7 +39,7 @@ export function PokemonCard({
             key={type}
             style={[styles.badge, { backgroundColor: typeColors[type] }]}
           >
-            <Text style={styles.badgeText}>{type}</Text>
+            <Text style={styles.badgeText}>{t(`types.${type}`)}</Text>
           </View>
         ))}
       </View>

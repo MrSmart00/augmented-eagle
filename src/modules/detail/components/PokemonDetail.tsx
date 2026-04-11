@@ -1,4 +1,5 @@
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 import type { Pokemon } from "@/src/shared";
 import { typeColors, FavoriteButton } from "@/src/shared";
 import { PokemonPhysicalInfo } from "./PokemonPhysicalInfo";
@@ -23,6 +24,7 @@ export function PokemonDetail({
   flavorText,
   isFlavorTextLoading,
 }: PokemonDetailProps) {
+  const { t } = useTranslation();
   const imageUri = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`;
   const formattedId = `#${String(pokemon.id).padStart(3, "0")}`;
 
@@ -46,7 +48,7 @@ export function PokemonDetail({
             key={type}
             style={[styles.badge, { backgroundColor: typeColors[type] }]}
           >
-            <Text style={styles.badgeText}>{type}</Text>
+            <Text style={styles.badgeText}>{t(`types.${type}`)}</Text>
           </View>
         ))}
       </View>
