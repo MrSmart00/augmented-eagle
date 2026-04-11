@@ -34,18 +34,39 @@ describe('PokemonCard', () => {
 });
 ```
 
-## ディレクトリ構成
+## アーキテクチャ（モジュラーモノリス）
+
+機能単位でモジュールを分離し、`index.ts`（バレルファイル）で公開APIを定義する。
+モジュール内ファイルへの直接importはESLintで禁止され、必ずバレル経由でアクセスする。
+
+### ディレクトリ構成
 
 ```
-app/              # Expo Router（ルーティング・画面定義のみ）
+app/                    # Expo Router（ルーティング・画面定義のみ）
 src/
-  components/     # UIコンポーネント（テスト対象）
+  modules/
+    <module>/           # 機能モジュール（例: home）
+      index.ts          # 公開API（バレルファイル）
+      components/       # UIコンポーネント
+      screens/          # 画面コンポーネント
+      hooks/            # カスタムフック
+      constants/        # 定数
+      types/            # 型定義
+      data/             # データ
+  shared/               # モジュール横断で使う共有コード
+    index.ts            # 公開API
 __tests__/
-  components/     # コンポーネントテスト
+  modules/
+    <module>/           # テスト（srcのモジュール構造をミラー）
 ```
 
-- コンポーネントは `src/components/` に作成し、`app/` からimportする
-- ルーティングロジックは `app/` に、UIロジックは `src/` に分離
+### モジュール境界ルール
+
+- `app/` からは `@/src/modules/<module>` 経由でのみimportする
+- テストからも `@/src/modules/<module>` 経由でimportする
+- モジュール内のファイル間は相対パスでimportする
+- 2つ以上のモジュールが使う共通コードは `src/shared/` に配置する
+- **`@/src/modules/<module>/components/...` のような直接アクセスはESLintエラーになる**
 
 ### カバレッジ
 

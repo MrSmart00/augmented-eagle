@@ -1,6 +1,6 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import type { Pokemon } from "@/src/types/pokemon";
-import { typeColors } from "@/src/constants/typeColors";
+import type { Pokemon } from "../types/pokemon";
+import { typeColors } from "../constants/typeColors";
 
 interface PokemonCardProps {
   pokemon: Pokemon;

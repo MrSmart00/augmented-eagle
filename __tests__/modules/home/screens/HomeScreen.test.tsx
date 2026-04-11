@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react-native";
-import { HomeScreen } from "@/src/screens/HomeScreen";
+import { HomeScreen } from "@/src/modules/home";
 
 describe("HomeScreen", () => {
   it("ポケモンカードが表示される", () => {

@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react-native";
-import { PokemonCard } from "@/src/components/PokemonCard";
-import type { Pokemon } from "@/src/types/pokemon";
+import { PokemonCard } from "@/src/modules/home";
+import type { Pokemon } from "@/src/modules/home";
 
 const mockPokemon: Pokemon = {
   id: 25,
