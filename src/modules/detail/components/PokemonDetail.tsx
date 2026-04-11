@@ -1,7 +1,6 @@
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import type { Pokemon } from "../domain/pokemon";
-import { typeColors } from "../domain/typeColors";
-import { FavoriteButton } from "./FavoriteButton";
+import type { Pokemon } from "@/src/shared";
+import { typeColors, FavoriteButton } from "@/src/shared";
 
 interface PokemonDetailProps {
   pokemon: Pokemon;

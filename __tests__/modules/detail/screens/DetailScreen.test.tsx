@@ -15,7 +15,7 @@ const mockUsePokemonById = {
   error: null as string | null,
 };
 
-jest.mock("@/src/shared/hooks/usePokemonById", () => ({
+jest.mock("@/src/modules/detail/hooks/usePokemonById", () => ({
   usePokemonById: () => mockUsePokemonById,
 }));
 

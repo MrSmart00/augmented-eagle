@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from "@testing-library/react-native";
-import { usePokemonById } from "@/src/shared/hooks/usePokemonById";
+import { usePokemonById } from "@/src/modules/detail/hooks/usePokemonById";
 import { fetchPokemonById } from "@/src/shared/repository/pokemonApi";
 import type { Pokemon } from "@/src/shared";
 

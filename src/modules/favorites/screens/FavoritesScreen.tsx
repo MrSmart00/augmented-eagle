@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
 import { PokemonCard, useFavorites } from "@/src/shared";
 import type { Pokemon } from "@/src/shared";
-import { usePokemonByIds } from "@/src/shared/hooks/usePokemonByIds";
+import { usePokemonByIds } from "../hooks/usePokemonByIds";
 
 export function FavoritesScreen() {
   const { favoriteIds, isFavorite, toggleFavorite } = useFavorites();

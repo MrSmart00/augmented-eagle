@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type { Pokemon } from "../domain/pokemon";
-import { fetchPokemonById } from "../repository/pokemonApi";
+import type { Pokemon } from "@/src/shared";
+import { fetchPokemonById } from "@/src/shared";
 
 export function usePokemonByIds(ids: number[]) {
   const [pokemon, setPokemon] = useState<Pokemon[]>([]);

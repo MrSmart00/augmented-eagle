@@ -1,6 +1,7 @@
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import { PokemonDetail, useFavorites } from "@/src/shared";
-import { usePokemonById } from "@/src/shared/hooks/usePokemonById";
+import { useFavorites } from "@/src/shared";
+import { PokemonDetail } from "../components/PokemonDetail";
+import { usePokemonById } from "../hooks/usePokemonById";
 
 interface DetailScreenProps {
   id: string;
