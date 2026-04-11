@@ -11,7 +11,7 @@ interface PokeApiPokemonResponse {
   }[];
 }
 
-export function capitalizeName(name: string): string {
+function capitalizeName(name: string): string {
   if (name.length === 0) return "";
   return name.charAt(0).toUpperCase() + name.slice(1);
 }

@@ -123,6 +123,26 @@ describe("usePokemonList", () => {
     expect(mockFetch).toHaveBeenLastCalledWith(20, 0);
   });
 
+  it("loadMoreでError以外のエラーでもerror状態が設定される", async () => {
+    mockFetch.mockResolvedValueOnce(makePage(0, true));
+    const { result } = renderHook(() => usePokemonList());
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    mockFetch.mockRejectedValueOnce("string error");
+    await act(async () => {
+      result.current.loadMore();
+    });
+
+    await waitFor(() => {
+      expect(result.current.isLoadingMore).toBe(false);
+    });
+
+    expect(result.current.error).toBe("Unknown error");
+  });
+
   it("エラー時にerror状態が設定される", async () => {
     mockFetch.mockRejectedValueOnce(new Error("Network error"));
     const { result } = renderHook(() => usePokemonList());
@@ -132,5 +152,16 @@ describe("usePokemonList", () => {
     });
 
     expect(result.current.error).toBe("Network error");
+  });
+
+  it("初期ロードでError以外のエラーでもerror状態が設定される", async () => {
+    mockFetch.mockRejectedValueOnce("string error");
+    const { result } = renderHook(() => usePokemonList());
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    expect(result.current.error).toBe("Unknown error");
   });
 });

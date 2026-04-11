@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react-native";
-import { PokemonDetail } from "@/src/shared";
+import { PokemonDetail } from "@/src/modules/detail/components/PokemonDetail";
 import type { Pokemon } from "@/src/shared";
 
 const mockPokemon: Pokemon = {

@@ -71,6 +71,17 @@ describe("fetchPokemonById", () => {
     });
   });
 
+  it("空文字の名前が正しく処理される", async () => {
+    (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({ id: 1, name: "", types: [] }),
+    });
+
+    const result = await fetchPokemonById(1);
+
+    expect(result.name).toBe("");
+  });
+
   it("HTTPエラー時にエラーをスローする", async () => {
     (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
       ok: false,
