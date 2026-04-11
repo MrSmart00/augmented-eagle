@@ -1,5 +1,9 @@
 # 🦅 Augmented Eagle (A.E.)
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ea3e7be5-1d00-4a09-a6a2-88fee227da92" alt="Augmented Eagle" width="200" />
+</p>
+
 > A sandbox for building and experimenting with AI-DLC environments in React Native.
 
 ---

@@ -1,3 +1,26 @@
+jest.mock("expo-splash-screen", () => ({
+  preventAutoHideAsync: jest.fn(() => Promise.resolve(true)),
+  hideAsync: jest.fn(() => Promise.resolve()),
+}));
+
+jest.mock("react-native-reanimated", () => {
+  const { View } = require("react-native");
+  return {
+    __esModule: true,
+    default: { View, createAnimatedComponent: (comp) => comp },
+    useSharedValue: jest.fn((init) => ({ value: init })),
+    useAnimatedStyle: jest.fn((fn) => fn()),
+    withTiming: jest.fn((toValue, _config, callback) => {
+      if (callback) callback(true);
+      return toValue;
+    }),
+    withDelay: jest.fn((_delay, animation) => animation),
+    withSequence: jest.fn((...animations) => animations[animations.length - 1]),
+    runOnJS: jest.fn((fn) => fn),
+    Easing: { out: jest.fn((e) => e), ease: "ease" },
+  };
+});
+
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({
     t: (key) => key,
