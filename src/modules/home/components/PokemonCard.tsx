@@ -1,17 +1,30 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import type { Pokemon } from "../domain/pokemon";
 import { typeColors } from "../domain/typeColors";
+import { FavoriteButton } from "./FavoriteButton";
 
 interface PokemonCardProps {
   pokemon: Pokemon;
   onPress?: () => void;
+  isFavorite?: boolean;
+  onToggleFavorite?: () => void;
 }
 
-export function PokemonCard({ pokemon, onPress }: PokemonCardProps) {
+export function PokemonCard({
+  pokemon,
+  onPress,
+  isFavorite,
+  onToggleFavorite,
+}: PokemonCardProps) {
   const imageUri = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`;
 
   return (
     <Pressable testID="pokemon-card" style={styles.card} onPress={onPress}>
+      {isFavorite !== undefined && onToggleFavorite && (
+        <View style={styles.favoriteWrapper}>
+          <FavoriteButton isFavorite={isFavorite} onToggle={onToggleFavorite} />
+        </View>
+      )}
       <Image
         testID="pokemon-image"
         source={{ uri: imageUri }}
@@ -33,6 +46,12 @@ export function PokemonCard({ pokemon, onPress }: PokemonCardProps) {
 }
 
 const styles = StyleSheet.create({
+  favoriteWrapper: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    zIndex: 1,
+  },
   card: {
     backgroundColor: "#fff",
     borderRadius: 12,

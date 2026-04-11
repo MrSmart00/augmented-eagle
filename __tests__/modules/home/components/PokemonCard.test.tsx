@@ -52,4 +52,44 @@ describe("PokemonCard", () => {
       fireEvent.press(screen.getByTestId("pokemon-card"));
     }).not.toThrow();
   });
+
+  it("isFavoriteとonToggleFavoriteが渡された場合、お気に入りボタンが表示される", () => {
+    render(
+      <PokemonCard
+        pokemon={mockPokemon}
+        isFavorite={false}
+        onToggleFavorite={jest.fn()}
+      />,
+    );
+    expect(screen.getByTestId("favorite-button")).toBeTruthy();
+  });
+
+  it("isFavoriteがtrueの場合、塗りつぶしハートが表示される", () => {
+    render(
+      <PokemonCard
+        pokemon={mockPokemon}
+        isFavorite={true}
+        onToggleFavorite={jest.fn()}
+      />,
+    );
+    expect(screen.getByText("♥")).toBeTruthy();
+  });
+
+  it("お気に入りボタン押下でonToggleFavoriteが呼ばれる", () => {
+    const onToggleFavorite = jest.fn();
+    render(
+      <PokemonCard
+        pokemon={mockPokemon}
+        isFavorite={false}
+        onToggleFavorite={onToggleFavorite}
+      />,
+    );
+    fireEvent.press(screen.getByTestId("favorite-button"));
+    expect(onToggleFavorite).toHaveBeenCalledTimes(1);
+  });
+
+  it("isFavoriteが未指定の場合、お気に入りボタンが表示されない", () => {
+    render(<PokemonCard pokemon={mockPokemon} />);
+    expect(screen.queryByTestId("favorite-button")).toBeNull();
+  });
 });
