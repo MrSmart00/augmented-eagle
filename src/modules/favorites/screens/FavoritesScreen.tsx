@@ -1,9 +1,12 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
-import { PokemonCard, pokemonSamples } from "@/src/modules/home";
-import { useFavorites } from "@/src/shared";
-import type { Pokemon } from "@/src/modules/home";
+import {
+  PokemonCard,
+  pokemonSamples,
+  useFavorites,
+} from "@/src/shared";
+import type { Pokemon } from "@/src/shared";
 
 export function FavoritesScreen() {
   const { favoriteIds, isFavorite, toggleFavorite } = useFavorites();

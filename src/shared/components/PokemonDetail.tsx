@@ -1,12 +1,19 @@
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import type { Pokemon } from "../domain/pokemon";
 import { typeColors } from "../domain/typeColors";
+import { FavoriteButton } from "./FavoriteButton";
 
 interface PokemonDetailProps {
   pokemon: Pokemon;
+  isFavorite?: boolean;
+  onToggleFavorite?: () => void;
 }
 
-export function PokemonDetail({ pokemon }: PokemonDetailProps) {
+export function PokemonDetail({
+  pokemon,
+  isFavorite,
+  onToggleFavorite,
+}: PokemonDetailProps) {
   const imageUri = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`;
   const formattedId = `#${String(pokemon.id).padStart(3, "0")}`;
 
@@ -18,7 +25,12 @@ export function PokemonDetail({ pokemon }: PokemonDetailProps) {
         style={styles.image}
       />
       <Text style={styles.id}>{formattedId}</Text>
-      <Text style={styles.name}>{pokemon.name}</Text>
+      <View style={styles.nameRow}>
+        <Text style={styles.name}>{pokemon.name}</Text>
+        {isFavorite !== undefined && onToggleFavorite && (
+          <FavoriteButton isFavorite={isFavorite} onToggle={onToggleFavorite} />
+        )}
+      </View>
       <View style={styles.typesRow}>
         {pokemon.types.map((type) => (
           <View
@@ -47,10 +59,15 @@ const styles = StyleSheet.create({
     color: "#888",
     marginTop: 16,
   },
+  nameRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginVertical: 8,
+  },
   name: {
     fontSize: 28,
     fontWeight: "bold",
-    marginVertical: 8,
   },
   typesRow: {
     flexDirection: "row",

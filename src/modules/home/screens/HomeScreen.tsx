@@ -1,11 +1,13 @@
 import { FlatList, StyleSheet, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
-import { PokemonCard } from "../components/PokemonCard";
-import { pokemonSamples } from "../repository/pokemonSamples";
+import {
+  PokemonCard,
+  pokemonSamples,
+  useFavorites,
+} from "@/src/shared";
+import type { Pokemon } from "@/src/shared";
 import { useSearch } from "../hooks/useSearch";
-import { useFavorites } from "@/src/shared";
-import type { Pokemon } from "../domain/pokemon";
 
 export function HomeScreen() {
   const { searchText, setSearchText, filteredItems } =

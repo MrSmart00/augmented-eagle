@@ -1,6 +1,6 @@
-import { render, screen } from "@testing-library/react-native";
-import { PokemonDetail } from "@/src/modules/home";
-import type { Pokemon } from "@/src/modules/home";
+import { render, screen, fireEvent } from "@testing-library/react-native";
+import { PokemonDetail } from "@/src/shared";
+import type { Pokemon } from "@/src/shared";
 
 const mockPokemon: Pokemon = {
   id: 25,
@@ -40,5 +40,34 @@ describe("PokemonDetail", () => {
     render(<PokemonDetail pokemon={multiTypePokemon} />);
     expect(screen.getByText("fire")).toBeTruthy();
     expect(screen.getByText("flying")).toBeTruthy();
+  });
+
+  it("isFavoriteとonToggleFavoriteが渡された場合、お気に入りボタンが表示される", () => {
+    render(
+      <PokemonDetail
+        pokemon={mockPokemon}
+        isFavorite={false}
+        onToggleFavorite={jest.fn()}
+      />,
+    );
+    expect(screen.getByTestId("favorite-button")).toBeTruthy();
+  });
+
+  it("お気に入りボタン押下でonToggleFavoriteが呼ばれる", () => {
+    const onToggleFavorite = jest.fn();
+    render(
+      <PokemonDetail
+        pokemon={mockPokemon}
+        isFavorite={false}
+        onToggleFavorite={onToggleFavorite}
+      />,
+    );
+    fireEvent.press(screen.getByTestId("favorite-button"));
+    expect(onToggleFavorite).toHaveBeenCalledTimes(1);
+  });
+
+  it("isFavoriteが未指定の場合、お気に入りボタンが表示されない", () => {
+    render(<PokemonDetail pokemon={mockPokemon} />);
+    expect(screen.queryByTestId("favorite-button")).toBeNull();
   });
 });
