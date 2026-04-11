@@ -27,4 +27,5 @@ expo:
 		exit 1; \
 	fi; \
 	echo "Starting Expo in $$(basename "$$selected") ..."; \
-	cd "$$selected" && pnpm expo start
+	# npxを使用: worktreeにはnode_modulesがないため、親ディレクトリを辿って解決できるnpxを使う（pnpmはローカルのnode_modulesのみ参照するため不可）
+	cd "$$selected" && npx expo start
