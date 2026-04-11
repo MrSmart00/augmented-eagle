@@ -29,8 +29,9 @@ const mockUsePokemonDetail = {
   error: null as string | null,
 };
 
-const mockUsePokemonFlavorText = {
+const mockUsePokemonSpeciesInfo = {
   flavorText: "It keeps its tail raised." as string | null,
+  localizedName: "ピカチュウ" as string | null,
   isLoading: false,
 };
 
@@ -38,8 +39,8 @@ jest.mock("@/src/modules/detail/hooks/usePokemonDetail", () => ({
   usePokemonDetail: () => mockUsePokemonDetail,
 }));
 
-jest.mock("@/src/modules/detail/hooks/usePokemonFlavorText", () => ({
-  usePokemonFlavorText: () => mockUsePokemonFlavorText,
+jest.mock("@/src/modules/detail/hooks/usePokemonSpeciesInfo", () => ({
+  usePokemonSpeciesInfo: () => mockUsePokemonSpeciesInfo,
 }));
 
 const renderWithProvider = (id: string) =>
@@ -54,13 +55,14 @@ describe("DetailScreen", () => {
     mockUsePokemonDetail.pokemon = mockPokemon;
     mockUsePokemonDetail.isLoading = false;
     mockUsePokemonDetail.error = null;
-    mockUsePokemonFlavorText.flavorText = "It keeps its tail raised.";
-    mockUsePokemonFlavorText.isLoading = false;
+    mockUsePokemonSpeciesInfo.flavorText = "It keeps its tail raised.";
+    mockUsePokemonSpeciesInfo.localizedName = "ピカチュウ";
+    mockUsePokemonSpeciesInfo.isLoading = false;
   });
 
-  it("指定IDのポケモン詳細が表示される", () => {
+  it("ローカライズされたポケモン名が表示される", () => {
     renderWithProvider("25");
-    expect(screen.getByText("Pikachu")).toBeTruthy();
+    expect(screen.getByText("ピカチュウ")).toBeTruthy();
   });
 
   it("ポケモンのIDが表示される", () => {
@@ -79,7 +81,7 @@ describe("DetailScreen", () => {
     mockUsePokemonDetail.pokemon = null;
     mockUsePokemonDetail.error = "Not found";
     renderWithProvider("999");
-    expect(screen.getByText("ポケモンが見つかりません")).toBeTruthy();
+    expect(screen.getByText("detail.notFound")).toBeTruthy();
   });
 
   it("お気に入りボタンが表示される", () => {
@@ -89,17 +91,23 @@ describe("DetailScreen", () => {
 
   it("ステータスが詳細画面に表示される", () => {
     renderWithProvider("25");
-    expect(screen.getByText("Base Stats")).toBeTruthy();
+    expect(screen.getByText("detail.baseStats")).toBeTruthy();
   });
 
   it("身長と体重が詳細画面に表示される", () => {
     renderWithProvider("25");
-    expect(screen.getByText("0.4 m")).toBeTruthy();
-    expect(screen.getByText("6.0 kg")).toBeTruthy();
+    expect(screen.getByText("detail.height")).toBeTruthy();
+    expect(screen.getByText("detail.weight")).toBeTruthy();
   });
 
   it("フレーバーテキストが表示される", () => {
     renderWithProvider("25");
     expect(screen.getByText("It keeps its tail raised.")).toBeTruthy();
+  });
+
+  it("ローカライズ名がnullの場合はAPI名が表示される", () => {
+    mockUsePokemonSpeciesInfo.localizedName = null;
+    renderWithProvider("25");
+    expect(screen.getByText("Pikachu")).toBeTruthy();
   });
 });

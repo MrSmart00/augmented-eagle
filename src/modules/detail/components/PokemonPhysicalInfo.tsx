@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 
 interface PokemonPhysicalInfoProps {
   height: number;
@@ -6,15 +7,17 @@ interface PokemonPhysicalInfoProps {
 }
 
 export function PokemonPhysicalInfo({ height, weight }: PokemonPhysicalInfoProps) {
+  const { t } = useTranslation();
+
   return (
     <View style={styles.container}>
       <View style={styles.item}>
-        <Text style={styles.label}>Height</Text>
-        <Text style={styles.value}>{(height / 10).toFixed(1)} m</Text>
+        <Text style={styles.label}>{t("detail.height")}</Text>
+        <Text style={styles.value}>{(height / 10).toFixed(1)}{t("detail.heightUnit")}</Text>
       </View>
       <View style={styles.item}>
-        <Text style={styles.label}>Weight</Text>
-        <Text style={styles.value}>{(weight / 10).toFixed(1)} kg</Text>
+        <Text style={styles.label}>{t("detail.weight")}</Text>
+        <Text style={styles.value}>{(weight / 10).toFixed(1)}{t("detail.weightUnit")}</Text>
       </View>
     </View>
   );

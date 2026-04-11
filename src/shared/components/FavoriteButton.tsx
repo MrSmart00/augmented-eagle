@@ -1,4 +1,5 @@
 import { Pressable, StyleSheet, Text } from "react-native";
+import { useTranslation } from "react-i18next";
 
 interface FavoriteButtonProps {
   isFavorite: boolean;
@@ -6,11 +7,13 @@ interface FavoriteButtonProps {
 }
 
 export function FavoriteButton({ isFavorite, onToggle }: FavoriteButtonProps) {
+  const { t } = useTranslation();
+
   return (
     <Pressable
       testID="favorite-button"
       onPress={onToggle}
-      accessibilityLabel={isFavorite ? "お気に入りから削除" : "お気に入りに追加"}
+      accessibilityLabel={isFavorite ? t("favoriteButton.remove") : t("favoriteButton.add")}
       style={styles.button}
     >
       <Text style={[styles.heart, isFavorite && styles.heartActive]}>

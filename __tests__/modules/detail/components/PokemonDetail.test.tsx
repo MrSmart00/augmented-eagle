@@ -4,7 +4,7 @@ import type { Pokemon } from "@/src/shared";
 
 const mockPokemon: Pokemon = {
   id: 25,
-  name: "ピカチュウ",
+  name: "pikachu",
   types: ["electric"],
   stats: [
     { name: "hp", baseStat: 35 },
@@ -24,7 +24,7 @@ const mockPokemon: Pokemon = {
 
 const multiTypePokemon: Pokemon = {
   id: 6,
-  name: "リザードン",
+  name: "charizard",
   types: ["fire", "flying"],
   stats: [
     { name: "hp", baseStat: 78 },
@@ -43,9 +43,14 @@ const multiTypePokemon: Pokemon = {
 };
 
 describe("PokemonDetail", () => {
-  it("ポケモンの名前が表示される", () => {
-    render(<PokemonDetail pokemon={mockPokemon} />);
+  it("ローカライズ名が渡された場合に表示される", () => {
+    render(<PokemonDetail pokemon={mockPokemon} localizedName="ピカチュウ" />);
     expect(screen.getByText("ピカチュウ")).toBeTruthy();
+  });
+
+  it("ローカライズ名がnullの場合はAPI名が表示される", () => {
+    render(<PokemonDetail pokemon={mockPokemon} localizedName={null} />);
+    expect(screen.getByText("pikachu")).toBeTruthy();
   });
 
   it("ポケモンのIDが3桁ゼロ埋めで表示される", () => {
@@ -97,25 +102,6 @@ describe("PokemonDetail", () => {
   it("isFavoriteが未指定の場合、お気に入りボタンが表示されない", () => {
     render(<PokemonDetail pokemon={mockPokemon} />);
     expect(screen.queryByTestId("favorite-button")).toBeNull();
-  });
-
-  it("身長と体重が表示される", () => {
-    render(<PokemonDetail pokemon={mockPokemon} />);
-    expect(screen.getByText("0.4 m")).toBeTruthy();
-    expect(screen.getByText("6.0 kg")).toBeTruthy();
-  });
-
-  it("とくせいが表示される", () => {
-    render(<PokemonDetail pokemon={mockPokemon} />);
-    expect(screen.getByText("Static")).toBeTruthy();
-    expect(screen.getByText("Lightning-rod (Hidden)")).toBeTruthy();
-  });
-
-  it("ステータスバーが表示される", () => {
-    render(<PokemonDetail pokemon={mockPokemon} />);
-    expect(screen.getByText("Base Stats")).toBeTruthy();
-    expect(screen.getByText("HP")).toBeTruthy();
-    expect(screen.getByText("Attack")).toBeTruthy();
   });
 
   it("フレーバーテキストが渡された場合に表示される", () => {

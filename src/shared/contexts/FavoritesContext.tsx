@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { Alert } from "react-native";
+import { i18n } from "../i18n";
 
 const MAX_FAVORITES = 5;
 
@@ -22,7 +23,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
         return prev.filter((fid) => fid !== id);
       }
       if (prev.length >= MAX_FAVORITES) {
-        Alert.alert("お気に入り上限", "お気に入りは5匹までです");
+        Alert.alert(i18n.t("favorites.limitTitle"), i18n.t("favorites.limitMessage"));
         return prev;
       }
       return [...prev, id];
