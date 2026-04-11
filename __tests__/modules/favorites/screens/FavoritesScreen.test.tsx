@@ -43,13 +43,13 @@ describe("FavoritesScreen", () => {
 
   it("お気に入り画面のタイトルが表示される", () => {
     renderWithProvider();
-    expect(screen.getByText("お気に入り")).toBeTruthy();
+    expect(screen.getByText("favorites.title")).toBeTruthy();
   });
 
   it("お気に入りが空の場合、プレースホルダーが表示される", () => {
     renderWithProvider();
     expect(
-      screen.getByText("お気に入りのポケモンはまだいません"),
+      screen.getByText("favorites.empty"),
     ).toBeTruthy();
   });
 

@@ -2,6 +2,12 @@ import { renderHook, act } from "@testing-library/react-native";
 import { Alert } from "react-native";
 import { FavoritesProvider, useFavorites } from "@/src/shared";
 
+jest.mock("@/src/shared/i18n", () => ({
+  i18n: {
+    t: (key: string) => key,
+  },
+}));
+
 jest.spyOn(Alert, "alert").mockImplementation(() => {});
 
 describe("FavoritesContext", () => {
@@ -68,8 +74,8 @@ describe("FavoritesContext", () => {
       expect(result.current.favoriteIds).toHaveLength(5);
       expect(result.current.favoriteIds).not.toContain(6);
       expect(Alert.alert).toHaveBeenCalledWith(
-        "お気に入り上限",
-        "お気に入りは5匹までです"
+        "favorites.limitTitle",
+        "favorites.limitMessage"
       );
     });
 

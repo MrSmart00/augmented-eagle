@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { PokemonCard, useFavorites } from "@/src/shared";
 import type { PokemonSummary } from "@/src/shared";
 import { useSearch } from "../hooks/useSearch";
@@ -27,6 +28,7 @@ export function HomeScreen() {
   } = usePokemonList();
   const { searchText, setSearchText, filteredItems } = useSearch(pokemon);
   const { isFavorite, toggleFavorite } = useFavorites();
+  const { t } = useTranslation();
 
   if (isLoading) {
     return (
@@ -52,7 +54,7 @@ export function HomeScreen() {
       <TextInput
         testID="search-input"
         style={styles.searchInput}
-        placeholder="ポケモンを検索..."
+        placeholder={t("home.searchPlaceholder")}
         value={searchText}
         onChangeText={setSearchText}
       />

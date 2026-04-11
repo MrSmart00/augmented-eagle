@@ -8,6 +8,7 @@ import { PokemonFlavorText } from "./PokemonFlavorText";
 
 interface PokemonDetailProps {
   pokemon: Pokemon;
+  localizedName?: string | null;
   isFavorite?: boolean;
   onToggleFavorite?: () => void;
   flavorText?: string | null;
@@ -16,6 +17,7 @@ interface PokemonDetailProps {
 
 export function PokemonDetail({
   pokemon,
+  localizedName,
   isFavorite,
   onToggleFavorite,
   flavorText,
@@ -33,7 +35,7 @@ export function PokemonDetail({
       />
       <Text style={styles.id}>{formattedId}</Text>
       <View style={styles.nameRow}>
-        <Text style={styles.name}>{pokemon.name}</Text>
+        <Text style={styles.name}>{localizedName ?? pokemon.name}</Text>
         {isFavorite !== undefined && onToggleFavorite && (
           <FavoriteButton isFavorite={isFavorite} onToggle={onToggleFavorite} />
         )}

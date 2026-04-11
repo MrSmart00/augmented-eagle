@@ -1,0 +1,47 @@
+{
+  "tabs": {
+    "pokedex": "ポケモン図鑑",
+    "favorites": "お気に入り",
+    "settings": "設定"
+  },
+  "navigation": {
+    "detail": "詳細"
+  },
+  "home": {
+    "searchPlaceholder": "ポケモンを検索..."
+  },
+  "favorites": {
+    "title": "お気に入り",
+    "empty": "お気に入りのポケモンはまだいません",
+    "limitTitle": "お気に入り上限",
+    "limitMessage": "お気に入りは5匹までです"
+  },
+  "detail": {
+    "notFound": "ポケモンが見つかりません",
+    "abilities": "とくせい",
+    "hiddenAbility": "(かくれとくせい)",
+    "height": "たかさ",
+    "weight": "おもさ",
+    "heightUnit": " m",
+    "weightUnit": " kg",
+    "baseStats": "きそポイント",
+    "stats": {
+      "hp": "HP",
+      "attack": "こうげき",
+      "defense": "ぼうぎょ",
+      "special-attack": "とくこう",
+      "special-defense": "とくぼう",
+      "speed": "すばやさ"
+    }
+  },
+  "favoriteButton": {
+    "remove": "お気に入りから削除",
+    "add": "お気に入りに追加"
+  },
+  "settings": {
+    "title": "設定",
+    "language": "言語",
+    "japanese": "日本語",
+    "english": "English"
+  }
+}

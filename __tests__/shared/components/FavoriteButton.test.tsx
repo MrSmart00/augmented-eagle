@@ -21,11 +21,11 @@ describe("FavoriteButton", () => {
 
   it("お気に入り状態のアクセシビリティラベルが正しい", () => {
     render(<FavoriteButton isFavorite={true} onToggle={jest.fn()} />);
-    expect(screen.getByLabelText("お気に入りから削除")).toBeTruthy();
+    expect(screen.getByLabelText("favoriteButton.remove")).toBeTruthy();
   });
 
   it("非お気に入り状態のアクセシビリティラベルが正しい", () => {
     render(<FavoriteButton isFavorite={false} onToggle={jest.fn()} />);
-    expect(screen.getByLabelText("お気に入りに追加")).toBeTruthy();
+    expect(screen.getByLabelText("favoriteButton.add")).toBeTruthy();
   });
 });

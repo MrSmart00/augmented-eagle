@@ -10,7 +10,7 @@ const mockAbilities: PokemonAbility[] = [
 describe("PokemonAbilities", () => {
   it("セクションタイトルが表示される", () => {
     render(<PokemonAbilities abilities={mockAbilities} />);
-    expect(screen.getByText("Abilities")).toBeTruthy();
+    expect(screen.getByText("detail.abilities")).toBeTruthy();
   });
 
   it("とくせい名がキャピタライズされて表示される", () => {
@@ -20,12 +20,12 @@ describe("PokemonAbilities", () => {
 
   it("隠れとくせいにラベルが付与される", () => {
     render(<PokemonAbilities abilities={mockAbilities} />);
-    expect(screen.getByText("Chlorophyll (Hidden)")).toBeTruthy();
+    expect(screen.getByText("Chlorophyll detail.hiddenAbility")).toBeTruthy();
   });
 
   it("複数のとくせいが全て表示される", () => {
     render(<PokemonAbilities abilities={mockAbilities} />);
     expect(screen.getByText("Overgrow")).toBeTruthy();
-    expect(screen.getByText("Chlorophyll (Hidden)")).toBeTruthy();
+    expect(screen.getByText("Chlorophyll detail.hiddenAbility")).toBeTruthy();
   });
 });

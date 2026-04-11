@@ -1,19 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 import type { PokemonStat } from "@/src/shared";
 import { StatBar } from "./StatBar";
 
 interface PokemonStatsProps {
   stats: PokemonStat[];
 }
-
-const statLabelMap: Record<string, string> = {
-  hp: "HP",
-  attack: "Attack",
-  defense: "Defense",
-  "special-attack": "Sp.Atk",
-  "special-defense": "Sp.Def",
-  speed: "Speed",
-};
 
 const statColorMap: Record<string, string> = {
   hp: "#FF5252",
@@ -25,13 +17,15 @@ const statColorMap: Record<string, string> = {
 };
 
 export function PokemonStats({ stats }: PokemonStatsProps) {
+  const { t } = useTranslation();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Base Stats</Text>
+      <Text style={styles.title}>{t("detail.baseStats")}</Text>
       {stats.map((stat) => (
         <StatBar
           key={stat.name}
-          label={statLabelMap[stat.name] ?? stat.name}
+          label={t(`detail.stats.${stat.name}`, { defaultValue: stat.name })}
           value={stat.baseStat}
           color={statColorMap[stat.name]}
         />

@@ -14,17 +14,17 @@ const mockStats: PokemonStat[] = [
 describe("PokemonStats", () => {
   it("セクションタイトルが表示される", () => {
     render(<PokemonStats stats={mockStats} />);
-    expect(screen.getByText("Base Stats")).toBeTruthy();
+    expect(screen.getByText("detail.baseStats")).toBeTruthy();
   });
 
   it("6つのステータスバーが表示される", () => {
     render(<PokemonStats stats={mockStats} />);
-    expect(screen.getByText("HP")).toBeTruthy();
-    expect(screen.getByText("Attack")).toBeTruthy();
-    expect(screen.getByText("Defense")).toBeTruthy();
-    expect(screen.getByText("Sp.Atk")).toBeTruthy();
-    expect(screen.getByText("Sp.Def")).toBeTruthy();
-    expect(screen.getByText("Speed")).toBeTruthy();
+    expect(screen.getByText("detail.stats.hp")).toBeTruthy();
+    expect(screen.getByText("detail.stats.attack")).toBeTruthy();
+    expect(screen.getByText("detail.stats.defense")).toBeTruthy();
+    expect(screen.getByText("detail.stats.special-attack")).toBeTruthy();
+    expect(screen.getByText("detail.stats.special-defense")).toBeTruthy();
+    expect(screen.getByText("detail.stats.speed")).toBeTruthy();
   });
 
   it("各ステータスの値が正しく表示される", () => {

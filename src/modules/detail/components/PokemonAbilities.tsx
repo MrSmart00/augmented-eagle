@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 import type { PokemonAbility } from "@/src/shared";
 
 interface PokemonAbilitiesProps {
@@ -11,15 +12,17 @@ function capitalizeName(name: string): string {
 }
 
 export function PokemonAbilities({ abilities }: PokemonAbilitiesProps) {
+  const { t } = useTranslation();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Abilities</Text>
+      <Text style={styles.title}>{t("detail.abilities")}</Text>
       <View style={styles.list}>
         {abilities.map((ability) => (
           <View key={ability.name} style={styles.badge}>
             <Text style={styles.badgeText}>
               {capitalizeName(ability.name)}
-              {ability.isHidden ? " (Hidden)" : ""}
+              {ability.isHidden ? ` ${t("detail.hiddenAbility")}` : ""}
             </Text>
           </View>
         ))}
