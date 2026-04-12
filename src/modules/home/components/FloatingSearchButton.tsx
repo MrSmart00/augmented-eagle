@@ -13,12 +13,14 @@ interface FloatingSearchButtonProps {
   searchText: string;
   onChangeText: (text: string) => void;
   placeholder?: string;
+  keyboardHeight?: number;
 }
 
 export function FloatingSearchButton({
   searchText,
   onChangeText,
   placeholder,
+  keyboardHeight = 0,
 }: FloatingSearchButtonProps) {
   const {
     isExpanded,
@@ -45,7 +47,13 @@ export function FloatingSearchButton({
 
   return (
     <>
-      <Animated.View style={[styles.container, fabAnimatedStyle]}>
+      <Animated.View
+        style={[
+          styles.container,
+          fabAnimatedStyle,
+          keyboardHeight > 0 && { bottom: keyboardHeight + 8 },
+        ]}
+      >
         {isExpanded ? (
           <Animated.View style={[styles.inputContainer, inputAnimatedStyle]}>
             <TextInput
