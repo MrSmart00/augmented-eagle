@@ -47,16 +47,6 @@ describe("FloatingSearchButton", () => {
     expect(onChangeText).toHaveBeenCalledWith("");
   });
 
-  it("バックドロップをタップすると折りたたまれる", () => {
-    const onChangeText = jest.fn();
-    render(
-      <FloatingSearchButton {...defaultProps} onChangeText={onChangeText} />,
-    );
-    fireEvent.press(screen.getByTestId("floating-search-fab"));
-    fireEvent.press(screen.getByTestId("search-backdrop"));
-    expect(onChangeText).toHaveBeenCalledWith("");
-  });
-
   it("プレースホルダーが表示される", () => {
     render(<FloatingSearchButton {...defaultProps} />);
     fireEvent.press(screen.getByTestId("floating-search-fab"));

@@ -45,13 +45,6 @@ export function FloatingSearchButton({
 
   return (
     <>
-      {isExpanded && (
-        <Pressable
-          testID="search-backdrop"
-          style={styles.backdrop}
-          onPress={handleClose}
-        />
-      )}
       <Animated.View style={[styles.container, fabAnimatedStyle]}>
         {isExpanded ? (
           <Animated.View style={[styles.inputContainer, inputAnimatedStyle]}>
@@ -84,10 +77,6 @@ export function FloatingSearchButton({
 }
 
 const styles = StyleSheet.create({
-  backdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
-  },
   container: {
     position: "absolute",
     bottom: 24,
