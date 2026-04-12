@@ -1,6 +1,7 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   Keyboard,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -13,12 +14,14 @@ interface FloatingSearchButtonProps {
   searchText: string;
   onChangeText: (text: string) => void;
   placeholder?: string;
+  keyboardHeight?: number;
 }
 
 export function FloatingSearchButton({
   searchText,
   onChangeText,
   placeholder,
+  keyboardHeight = 0,
 }: FloatingSearchButtonProps) {
   const {
     isExpanded,
@@ -37,6 +40,18 @@ export function FloatingSearchButton({
     }, 100);
   };
 
+  useEffect(() => {
+    const hideEvent =
+      Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
+
+    const sub = Keyboard.addListener(hideEvent, () => {
+      onChangeText("");
+      close();
+    });
+
+    return () => sub.remove();
+  }, [close, onChangeText]);
+
   const handleClose = () => {
     Keyboard.dismiss();
     onChangeText("");
@@ -45,7 +60,15 @@ export function FloatingSearchButton({
 
   return (
     <>
-      <Animated.View style={[styles.container, fabAnimatedStyle]}>
+      <Animated.View
+        style={[
+          styles.container,
+          fabAnimatedStyle,
+          keyboardHeight > 0 && {
+            bottom: keyboardHeight + (Platform.OS === "ios" ? 8 : 32),
+          },
+        ]}
+      >
         {isExpanded ? (
           <Animated.View style={[styles.inputContainer, inputAnimatedStyle]}>
             <TextInput

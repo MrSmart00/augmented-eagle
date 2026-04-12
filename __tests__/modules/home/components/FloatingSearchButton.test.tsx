@@ -1,4 +1,5 @@
-import { render, screen, fireEvent } from "@testing-library/react-native";
+import { render, screen, fireEvent, act } from "@testing-library/react-native";
+import { Keyboard, Platform } from "react-native";
 import { FloatingSearchButton } from "@/src/modules/home/components/FloatingSearchButton";
 
 describe("FloatingSearchButton", () => {
@@ -51,5 +52,37 @@ describe("FloatingSearchButton", () => {
     render(<FloatingSearchButton {...defaultProps} />);
     fireEvent.press(screen.getByTestId("floating-search-fab"));
     expect(screen.getByPlaceholderText("Search...")).toBeTruthy();
+  });
+
+  it("キーボードが閉じたらFABボタンに戻る", () => {
+    const onChangeText = jest.fn();
+    const hideEvent =
+      Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
+
+    let hideCallback: (() => void) | undefined;
+    const addListenerSpy = jest.spyOn(Keyboard, "addListener");
+    addListenerSpy.mockImplementation((event, callback) => {
+      if (event === hideEvent) {
+        hideCallback = callback as () => void;
+      }
+      return { remove: jest.fn() } as ReturnType<
+        typeof Keyboard.addListener
+      >;
+    });
+
+    render(
+      <FloatingSearchButton {...defaultProps} onChangeText={onChangeText} />,
+    );
+    fireEvent.press(screen.getByTestId("floating-search-fab"));
+    expect(screen.getByTestId("search-input")).toBeTruthy();
+
+    act(() => {
+      hideCallback?.();
+    });
+
+    expect(onChangeText).toHaveBeenCalledWith("");
+    expect(screen.getByTestId("floating-search-fab")).toBeTruthy();
+
+    addListenerSpy.mockRestore();
   });
 });

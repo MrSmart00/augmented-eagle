@@ -1,11 +1,15 @@
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  Keyboard,
+  Platform,
   RefreshControl,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { Link } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { PokemonCard, useFavorites } from "@/src/shared";
@@ -28,6 +32,27 @@ export function HomeScreen() {
   const { searchText, setSearchText, filteredItems } = useSearch(pokemon);
   const { isFavorite, toggleFavorite } = useFavorites();
   const { t } = useTranslation();
+  const tabBarHeight = useBottomTabBarHeight();
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+  useEffect(() => {
+    const showEvent =
+      Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow";
+    const hideEvent =
+      Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
+
+    const showSub = Keyboard.addListener(showEvent, (e) => {
+      setKeyboardHeight(e.endCoordinates.height);
+    });
+    const hideSub = Keyboard.addListener(hideEvent, () => {
+      setKeyboardHeight(0);
+    });
+
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, []);
 
   if (isLoading) {
     return (
@@ -89,6 +114,7 @@ export function HomeScreen() {
         searchText={searchText}
         onChangeText={setSearchText}
         placeholder={t("home.searchPlaceholder")}
+        keyboardHeight={keyboardHeight > 0 ? keyboardHeight - tabBarHeight : 0}
       />
     </View>
   );
