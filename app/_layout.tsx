@@ -17,7 +17,7 @@ function RootLayoutNav() {
   return (
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="detail/[id]" options={{ title: t("navigation.detail") }} />
+      <Stack.Screen name="detail/[id]" options={{ title: t("navigation.detail"), headerBackButtonDisplayMode: "minimal" }} />
     </Stack>
   );
 }

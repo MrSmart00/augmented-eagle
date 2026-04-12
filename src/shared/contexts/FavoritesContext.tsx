@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { Alert } from "react-native";
 import { i18n } from "../i18n";
 
-const MAX_FAVORITES = 5;
+const MAX_FAVORITES = 6;
 
 interface FavoritesContextValue {
   favoriteIds: number[];

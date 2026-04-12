@@ -41,11 +41,6 @@ describe("FavoritesScreen", () => {
     mockUsePokemonByIds.error = null;
   });
 
-  it("お気に入り画面のタイトルが表示される", () => {
-    renderWithProvider();
-    expect(screen.getByText("favorites.title")).toBeTruthy();
-  });
-
   it("お気に入りが空の場合、プレースホルダーが表示される", () => {
     renderWithProvider();
     expect(

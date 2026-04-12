@@ -14,7 +14,7 @@
     "title": "Favorites",
     "empty": "No favorite Pokémon yet",
     "limitTitle": "Favorites Limit",
-    "limitMessage": "You can have up to 5 favorites"
+    "limitMessage": "You can have up to 6 favorites"
   },
   "detail": {
     "notFound": "Pokémon not found",
