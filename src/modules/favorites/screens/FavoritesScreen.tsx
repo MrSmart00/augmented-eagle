@@ -18,7 +18,6 @@ export function FavoritesScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>{t("favorites.title")}</Text>
       {isLoading ? (
         <View style={styles.emptyContent}>
           <ActivityIndicator testID="loading-indicator" size="large" />
@@ -59,12 +58,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f5f5f5",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    paddingVertical: 16,
   },
   emptyContent: {
     flex: 1,
