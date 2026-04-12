@@ -10,6 +10,12 @@ jest.mock("react-native-reanimated", () => {
     default: { View, createAnimatedComponent: (comp) => comp },
     useSharedValue: jest.fn((init) => ({ value: init })),
     useAnimatedStyle: jest.fn((fn) => fn()),
+    interpolate: jest.fn((value, inputRange, outputRange) => {
+      const [inMin, inMax] = inputRange;
+      const [outMin, outMax] = outputRange;
+      const ratio = (value - inMin) / (inMax - inMin);
+      return outMin + ratio * (outMax - outMin);
+    }),
     withTiming: jest.fn((toValue, _config, callback) => {
       if (callback) callback(true);
       return toValue;

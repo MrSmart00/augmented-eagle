@@ -69,13 +69,20 @@ describe("HomeScreen", () => {
     expect(screen.getByTestId("link-/detail/1")).toBeTruthy();
   });
 
-  it("検索入力フィールドが表示される", () => {
+  it("FABボタンが表示される", () => {
     renderWithProvider();
+    expect(screen.getByTestId("floating-search-fab")).toBeTruthy();
+  });
+
+  it("FABをタップすると検索入力フィールドが表示される", () => {
+    renderWithProvider();
+    fireEvent.press(screen.getByTestId("floating-search-fab"));
     expect(screen.getByTestId("search-input")).toBeTruthy();
   });
 
   it("検索テキスト入力でポケモンがフィルタリングされる", () => {
     renderWithProvider();
+    fireEvent.press(screen.getByTestId("floating-search-fab"));
     fireEvent.changeText(screen.getByTestId("search-input"), "Pika");
     expect(screen.getByText("Pikachu")).toBeTruthy();
     expect(screen.queryByText("Bulbasaur")).toBeNull();
