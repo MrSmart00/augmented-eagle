@@ -60,12 +60,11 @@ app/                        # Expo Router（ルーティング定義のみ）
 └── detail/[id].tsx         #   ポケモン詳細（動的ルート）
 
 src/
-├── modules/
-│   ├── home/               # ポケモン一覧・検索
-│   ├── detail/             # ポケモン詳細表示
-│   ├── favorites/          # お気に入り一覧
-│   ├── settings/           # 設定（言語切り替え）
-│   └── splash/             # スプラッシュアニメーション
+├── home/                   # ポケモン一覧・検索
+├── detail/                 # ポケモン詳細表示
+├── favorites/              # お気に入り一覧
+├── settings/               # 設定（言語切り替え）
+├── splash/                 # スプラッシュアニメーション
 └── shared/                 # モジュール横断の共有コード
     ├── components/         #   PokemonCard, FavoriteButton
     ├── contexts/           #   FavoritesContext
