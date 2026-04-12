@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   Keyboard,
   Platform,
@@ -39,6 +39,18 @@ export function FloatingSearchButton({
       inputRef.current?.focus();
     }, 100);
   };
+
+  useEffect(() => {
+    const hideEvent =
+      Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
+
+    const sub = Keyboard.addListener(hideEvent, () => {
+      onChangeText("");
+      close();
+    });
+
+    return () => sub.remove();
+  }, [close, onChangeText]);
 
   const handleClose = () => {
     Keyboard.dismiss();

@@ -24,6 +24,10 @@ jest.mock("@/src/modules/home/hooks/usePokemonList", () => ({
   usePokemonList: () => mockUsePokemonList,
 }));
 
+jest.mock("@react-navigation/bottom-tabs", () => ({
+  useBottomTabBarHeight: () => 49,
+}));
+
 jest.mock("expo-router", () => ({
   Link: ({
     children,
