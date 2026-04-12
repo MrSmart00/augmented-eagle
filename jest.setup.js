@@ -36,6 +36,21 @@ jest.mock("react-i18next", () => ({
   initReactI18next: { type: "3rdParty", init: jest.fn() },
 }));
 
+jest.mock("lottie-react-native", () => {
+  const { View } = require("react-native");
+  const React = require("react");
+  const LottieView = React.forwardRef((props, ref) => {
+    React.useImperativeHandle(ref, () => ({
+      play: jest.fn(),
+      reset: jest.fn(),
+      pause: jest.fn(),
+    }));
+    return React.createElement(View, { ...props, testID: props.testID });
+  });
+  LottieView.displayName = "LottieView";
+  return { __esModule: true, default: LottieView };
+});
+
 jest.mock("@react-native-async-storage/async-storage", () => {
   let store = {};
   return {

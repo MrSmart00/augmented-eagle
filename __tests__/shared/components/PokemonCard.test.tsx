@@ -64,7 +64,7 @@ describe("PokemonCard", () => {
     expect(screen.getByTestId("favorite-button")).toBeTruthy();
   });
 
-  it("isFavoriteがtrueの場合、塗りつぶしハートが表示される", () => {
+  it("isFavoriteがtrueの場合、Lottieアニメーションが表示される", () => {
     render(
       <PokemonCard
         pokemon={mockPokemon}
@@ -72,7 +72,7 @@ describe("PokemonCard", () => {
         onToggleFavorite={jest.fn()}
       />,
     );
-    expect(screen.getByText("♥")).toBeTruthy();
+    expect(screen.getByTestId("favorite-lottie")).toBeTruthy();
   });
 
   it("お気に入りボタン押下でonToggleFavoriteが呼ばれる", () => {
