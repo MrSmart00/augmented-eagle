@@ -14,7 +14,7 @@
     "title": "お気に入り",
     "empty": "お気に入りのポケモンはまだいません",
     "limitTitle": "お気に入り上限",
-    "limitMessage": "お気に入りは5匹までです"
+    "limitMessage": "お気に入りは6匹までです"
   },
   "detail": {
     "notFound": "ポケモンが見つかりません",

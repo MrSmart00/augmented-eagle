@@ -57,7 +57,7 @@ describe("FavoritesContext", () => {
       expect(result.current.isFavorite(25)).toBe(false);
     });
 
-    it("お気に入りが5匹に達している場合、追加できずアラートが表示される", () => {
+    it("お気に入りが6匹に達している場合、追加できずアラートが表示される", () => {
       const { result } = renderHook(() => useFavorites(), { wrapper });
       act(() => {
         result.current.toggleFavorite(1);
@@ -65,14 +65,15 @@ describe("FavoritesContext", () => {
         result.current.toggleFavorite(3);
         result.current.toggleFavorite(4);
         result.current.toggleFavorite(5);
-      });
-      expect(result.current.favoriteIds).toHaveLength(5);
-
-      act(() => {
         result.current.toggleFavorite(6);
       });
-      expect(result.current.favoriteIds).toHaveLength(5);
-      expect(result.current.favoriteIds).not.toContain(6);
+      expect(result.current.favoriteIds).toHaveLength(6);
+
+      act(() => {
+        result.current.toggleFavorite(7);
+      });
+      expect(result.current.favoriteIds).toHaveLength(6);
+      expect(result.current.favoriteIds).not.toContain(7);
       expect(Alert.alert).toHaveBeenCalledWith(
         "favorites.limitTitle",
         "favorites.limitMessage"
@@ -87,12 +88,13 @@ describe("FavoritesContext", () => {
         result.current.toggleFavorite(3);
         result.current.toggleFavorite(4);
         result.current.toggleFavorite(5);
+        result.current.toggleFavorite(6);
       });
 
       act(() => {
         result.current.toggleFavorite(3);
       });
-      expect(result.current.favoriteIds).toHaveLength(4);
+      expect(result.current.favoriteIds).toHaveLength(5);
       expect(result.current.favoriteIds).not.toContain(3);
     });
 
@@ -106,6 +108,7 @@ describe("FavoritesContext", () => {
         result.current.toggleFavorite(3);
         result.current.toggleFavorite(4);
         result.current.toggleFavorite(5);
+        result.current.toggleFavorite(6);
       });
       expect(result.current.isFull).toBe(true);
     });
