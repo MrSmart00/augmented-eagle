@@ -1,4 +1,4 @@
-import { SettingsScreen } from "@/src/modules/settings";
+import { SettingsScreen } from "@/src/settings";
 
 export default function SettingsTab() {
   return <SettingsScreen />;

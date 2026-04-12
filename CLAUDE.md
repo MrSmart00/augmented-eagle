@@ -44,28 +44,26 @@ describe('PokemonCard', () => {
 ```
 app/                    # Expo Router（ルーティング・画面定義のみ）
 src/
-  modules/
-    <module>/           # 機能モジュール（例: home）
-      index.ts          # 公開API（バレルファイル）
-      components/       # UIコンポーネント
-      screens/          # 画面コンポーネント
-      hooks/            # カスタムフック
-      domain/           # ドメインモデル・ビジネスルール
-      repository/       # データの取得・永続化
+  <module>/             # 機能モジュール（例: home）
+    index.ts            # 公開API（バレルファイル）
+    components/         # UIコンポーネント
+    screens/            # 画面コンポーネント
+    hooks/              # カスタムフック
+    domain/             # ドメインモデル・ビジネスルール
+    repository/         # データの取得・永続化
   shared/               # モジュール横断で使う共有コード
     index.ts            # 公開API
 __tests__/
-  modules/
-    <module>/           # テスト（srcのモジュール構造をミラー）
+  <module>/             # テスト（srcのモジュール構造をミラー）
 ```
 
 ### モジュール境界ルール
 
-- `app/` からは `@/src/modules/<module>` 経由でのみimportする
-- テストからも `@/src/modules/<module>` 経由でimportする
+- `app/` からは `@/src/<module>` 経由でのみimportする
+- テストからも `@/src/<module>` 経由でimportする
 - モジュール内のファイル間は相対パスでimportする
 - 2つ以上のモジュールが使う共通コードは `src/shared/` に配置する
-- **`@/src/modules/<module>/components/...` のような直接アクセスはESLintエラーになる**
+- **`@/src/<module>/components/...` のような直接アクセスはESLintエラーになる**
 
 ### カバレッジ
 

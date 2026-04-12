@@ -1,4 +1,4 @@
-import { FavoritesScreen } from "@/src/modules/favorites";
+import { FavoritesScreen } from "@/src/favorites";
 
 export default function FavoritesTab() {
   return <FavoritesScreen />;

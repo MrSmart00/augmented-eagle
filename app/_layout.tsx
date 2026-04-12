@@ -3,7 +3,7 @@ import { Stack } from "expo-router";
 import { I18nextProvider, useTranslation } from "react-i18next";
 import * as SplashScreen from "expo-splash-screen";
 import { FavoritesProvider, i18n, initI18n } from "@/src/shared";
-import { AnimatedSplash } from "@/src/modules/splash";
+import { AnimatedSplash } from "@/src/splash";
 
 SplashScreen.preventAutoHideAsync();
 
