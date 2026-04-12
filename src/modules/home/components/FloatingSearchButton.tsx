@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import {
   Keyboard,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -51,7 +52,9 @@ export function FloatingSearchButton({
         style={[
           styles.container,
           fabAnimatedStyle,
-          keyboardHeight > 0 && { bottom: keyboardHeight + 8 },
+          keyboardHeight > 0 && {
+            bottom: keyboardHeight + (Platform.OS === "ios" ? 8 : 32),
+          },
         ]}
       >
         {isExpanded ? (
