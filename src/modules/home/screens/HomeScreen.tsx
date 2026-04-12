@@ -6,7 +6,6 @@ import {
   Text,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { PokemonCard, useFavorites } from "@/src/shared";
@@ -32,17 +31,17 @@ export function HomeScreen() {
 
   if (isLoading) {
     return (
-      <SafeAreaView style={styles.centered}>
+      <View style={styles.centered}>
         <ActivityIndicator testID="loading-indicator" size="large" />
-      </SafeAreaView>
+      </View>
     );
   }
 
   if (error && pokemon.length === 0) {
     return (
-      <SafeAreaView style={styles.centered}>
+      <View style={styles.centered}>
         <Text testID="error-text">{error}</Text>
-      </SafeAreaView>
+      </View>
     );
   }
 
@@ -50,7 +49,7 @@ export function HomeScreen() {
     filteredItems.length % 2 === 1 ? [...filteredItems, null] : filteredItems;
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <FlatList
         data={gridData}
         keyExtractor={(_item, index) => index.toString()}
@@ -91,7 +90,7 @@ export function HomeScreen() {
         onChangeText={setSearchText}
         placeholder={t("home.searchPlaceholder")}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -108,7 +107,7 @@ const styles = StyleSheet.create({
   },
   list: {
     paddingHorizontal: 16,
-    paddingVertical: 32,
+    paddingVertical: 16,
     paddingBottom: 80,
     gap: 16,
   },
