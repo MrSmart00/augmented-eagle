@@ -86,7 +86,7 @@ describe("PokemonDetail", () => {
     expect(screen.getByTestId("favorite-button")).toBeTruthy();
   });
 
-  it("お気に入りボタン押下でonToggleFavoriteが呼ばれる", () => {
+  it("お気に入りボタン押下後アニメーション完了でonToggleFavoriteが呼ばれる", () => {
     const onToggleFavorite = jest.fn();
     render(
       <PokemonDetail
@@ -96,6 +96,8 @@ describe("PokemonDetail", () => {
       />,
     );
     fireEvent.press(screen.getByTestId("favorite-button"));
+    expect(onToggleFavorite).not.toHaveBeenCalled();
+    screen.getByTestId("favorite-lottie").props.onAnimationFinish(false);
     expect(onToggleFavorite).toHaveBeenCalledTimes(1);
   });
 

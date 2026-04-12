@@ -133,6 +133,12 @@ pnpm expo start
 
 ---
 
+## 🎨 Credits
+
+- お気に入りボタンのアニメーション: [Like](https://lottiefiles.com/free-animation/like-oWZfadnX6c) by LottieFiles（[Lottie Simple License](https://lottiefiles.com/page/license) に基づき使用）
+
+---
+
 ## 📄 License
 
 MIT
