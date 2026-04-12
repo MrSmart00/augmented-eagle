@@ -6,13 +6,13 @@ export default function TabLayout() {
   const { t } = useTranslation();
 
   return (
-    <Tabs>
+    <Tabs screenOptions={{ tabBarActiveTintColor: "#e74c3c" }}>
       <Tabs.Screen
         name="index"
         options={{
           title: t("tabs.pokedex"),
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="list" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name="list" size={focused ? size + 4 : size} color={color} />
           ),
         }}
       />
@@ -20,8 +20,8 @@ export default function TabLayout() {
         name="favorites"
         options={{
           title: t("tabs.favorites"),
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="heart" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name="heart" size={focused ? size + 4 : size} color={color} />
           ),
         }}
       />
@@ -29,8 +29,8 @@ export default function TabLayout() {
         name="settings"
         options={{
           title: t("tabs.settings"),
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="settings-sharp" size={size} color={color} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name="settings-sharp" size={focused ? size + 4 : size} color={color} />
           ),
         }}
       />
