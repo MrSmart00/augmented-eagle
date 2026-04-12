@@ -10,7 +10,6 @@ interface FavoriteButtonProps {
 
 const HEART_ANIMATION = require("../../../assets/animations/heart-favorite.json");
 
-const TOTAL_FRAMES = 181;
 const ON_START = 0;
 const ON_END = 90;
 const OFF_START = 91;
@@ -19,24 +18,28 @@ const OFF_END = 181;
 export function FavoriteButton({ isFavorite, onToggle }: FavoriteButtonProps) {
   const { t } = useTranslation();
   const animationRef = useRef<LottieView>(null);
-  const isFirstRender = useRef(true);
+  const isAnimating = useRef(false);
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    if (isFavorite) {
-      animationRef.current?.play(ON_START, ON_END);
-    } else {
-      animationRef.current?.play(OFF_START, OFF_END);
-    }
+    if (isAnimating.current) return;
+    const frame = isFavorite ? ON_END : OFF_END;
+    animationRef.current?.play(frame, frame);
   }, [isFavorite]);
+
+  const handlePress = () => {
+    isAnimating.current = true;
+    if (isFavorite) {
+      animationRef.current?.play(OFF_START, OFF_END);
+    } else {
+      animationRef.current?.play(ON_START, ON_END);
+    }
+    onToggle();
+  };
 
   return (
     <Pressable
       testID="favorite-button"
-      onPress={onToggle}
+      onPress={handlePress}
       accessibilityLabel={isFavorite ? t("favoriteButton.remove") : t("favoriteButton.add")}
       style={styles.button}
     >
@@ -44,10 +47,10 @@ export function FavoriteButton({ isFavorite, onToggle }: FavoriteButtonProps) {
         ref={animationRef}
         testID="favorite-lottie"
         source={HEART_ANIMATION}
-        progress={isFavorite ? ON_END / TOTAL_FRAMES : OFF_END / TOTAL_FRAMES}
         style={styles.lottie}
         loop={false}
         autoPlay={false}
+        onAnimationFinish={() => { isAnimating.current = false; }}
       />
     </Pressable>
   );
