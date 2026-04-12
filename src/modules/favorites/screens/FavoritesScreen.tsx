@@ -1,5 +1,4 @@
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { PokemonCard, useFavorites } from "@/src/shared";
@@ -17,7 +16,7 @@ export function FavoritesScreen() {
       : favoritePokemon;
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {isLoading ? (
         <View style={styles.emptyContent}>
           <ActivityIndicator testID="loading-indicator" size="large" />
@@ -50,7 +49,7 @@ export function FavoritesScreen() {
           columnWrapperStyle={styles.row}
         />
       )}
-    </SafeAreaView>
+    </View>
   );
 }
 
