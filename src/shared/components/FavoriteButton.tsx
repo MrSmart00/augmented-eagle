@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Pressable, StyleSheet } from "react-native";
 import { useTranslation } from "react-i18next";
 import LottieView from "lottie-react-native";
@@ -8,18 +8,23 @@ interface FavoriteButtonProps {
   onToggle: () => void;
 }
 
-const HEART_ON = require("../../../assets/animations/heart-on.json");
-const HEART_OFF = require("../../../assets/animations/heart-off.json");
+const LIKE_SOURCE = require("../../../assets/animations/like.json");
+const FRAME_ON_START = 0;
+const FRAME_ON_END = 90;
+const FRAME_OFF_START = 91;
+const FRAME_OFF_END = 181;
 
 export function FavoriteButton({ isFavorite, onToggle }: FavoriteButtonProps) {
   const { t } = useTranslation();
-  const sourceRef = useRef(isFavorite ? HEART_OFF : HEART_ON);
-  const [playCount, setPlayCount] = useState(0);
+  const animationRef = useRef<LottieView>(null);
 
   const handlePress = () => {
-    sourceRef.current = isFavorite ? HEART_OFF : HEART_ON;
+    if (isFavorite) {
+      animationRef.current?.play(FRAME_OFF_START, FRAME_OFF_END);
+    } else {
+      animationRef.current?.play(FRAME_ON_START, FRAME_ON_END);
+    }
     onToggle();
-    setPlayCount((c) => c + 1);
   };
 
   return (
@@ -30,12 +35,12 @@ export function FavoriteButton({ isFavorite, onToggle }: FavoriteButtonProps) {
       style={styles.button}
     >
       <LottieView
-        key={playCount}
+        ref={animationRef}
         testID="favorite-lottie"
-        source={sourceRef.current}
+        source={LIKE_SOURCE}
         style={styles.lottie}
         loop={false}
-        autoPlay={playCount > 0}
+        autoPlay={false}
       />
     </Pressable>
   );
