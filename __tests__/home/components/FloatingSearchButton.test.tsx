@@ -65,7 +65,7 @@ describe("FloatingSearchButton", () => {
       if (event === hideEvent) {
         hideCallback = callback as () => void;
       }
-      return { remove: jest.fn() } as ReturnType<
+      return { remove: jest.fn() } as unknown as ReturnType<
         typeof Keyboard.addListener
       >;
     });
