@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Pressable, StyleSheet } from "react-native";
 import { useTranslation } from "react-i18next";
 import LottieView from "lottie-react-native";
@@ -17,14 +17,26 @@ const FRAME_OFF_END = 181;
 export function FavoriteButton({ isFavorite, onToggle }: FavoriteButtonProps) {
   const { t } = useTranslation();
   const animationRef = useRef<LottieView>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const progress = isPlaying
+    ? undefined
+    : isFavorite
+      ? FRAME_ON_END / FRAME_OFF_END
+      : 0;
 
   const handlePress = () => {
+    setIsPlaying(true);
     if (isFavorite) {
       animationRef.current?.play(FRAME_OFF_START, FRAME_OFF_END);
     } else {
       animationRef.current?.play(FRAME_ON_START, FRAME_ON_END);
     }
     onToggle();
+  };
+
+  const handleAnimationFinish = () => {
+    setIsPlaying(false);
   };
 
   return (
@@ -38,9 +50,11 @@ export function FavoriteButton({ isFavorite, onToggle }: FavoriteButtonProps) {
         ref={animationRef}
         testID="favorite-lottie"
         source={LIKE_SOURCE}
+        progress={progress}
         style={styles.lottie}
         loop={false}
         autoPlay={false}
+        onAnimationFinish={handleAnimationFinish}
       />
     </Pressable>
   );
