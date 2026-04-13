@@ -30,7 +30,7 @@ export function HomeScreen() {
     refresh,
   } = usePokemonList();
   const { searchText, setSearchText, filteredItems } = useSearch(pokemon);
-  const { isFavorite, toggleFavorite } = useFavorites();
+  const { favoriteIds, isFavorite, toggleFavorite } = useFavorites();
   const { t } = useTranslation();
   const tabBarHeight = useBottomTabBarHeight();
   const [keyboardHeight, setKeyboardHeight] = useState(0);
@@ -91,6 +91,7 @@ export function HomeScreen() {
             )}
           </View>
         )}
+        extraData={favoriteIds}
         numColumns={2}
         contentContainerStyle={styles.list}
         columnWrapperStyle={styles.row}
