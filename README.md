@@ -4,6 +4,14 @@
   <img src="https://github.com/user-attachments/assets/ea3e7be5-1d00-4a09-a6a2-88fee227da92" alt="Augmented Eagle" width="400" />
 </p>
 
+![Node.js](https://img.shields.io/badge/Node.js-v24-339933?logo=nodedotjs&logoColor=white)
+![Expo SDK](https://img.shields.io/badge/Expo_SDK-55-000020?logo=expo&logoColor=white)
+![React Native](https://img.shields.io/badge/React_Native-0.83-61DAFB?logo=react&logoColor=black)
+![React](https://img.shields.io/badge/React-19.2-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)
+![pnpm](https://img.shields.io/badge/pnpm-10-F69220?logo=pnpm&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
+
 >> [AI-DLC（AI-Driven Development Lifecycle）](https://aws.amazon.com/jp/blogs/news/ai-driven-development-life-cycle/)を実践しながらポケモン図鑑アプリを構築するプロジェクト
 
 ---
@@ -26,7 +34,7 @@ GitHub Issues #1〜#5 に定義された各ステップに沿って、AI と協�
 
 | カテゴリ | 技術 |
 |---------|------|
-| フレームワーク | Expo 54 / React Native 0.81 / React 19 |
+| フレームワーク | Expo 55 / React Native 0.83 / React 19.2 |
 | 言語 | TypeScript (strict mode) |
 | ルーティング | Expo Router (file-based routing) |
 | 国際化 | i18next / react-i18next / expo-localization |
