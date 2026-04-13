@@ -19,13 +19,10 @@ describe("FavoriteButton", () => {
     expect(lottie.props.loop).toBe(false);
   });
 
-  it("アニメーション完了後にonToggleが呼ばれる", () => {
+  it("ボタン押下時にonToggleが即座に呼ばれる", () => {
     const onToggle = jest.fn();
     render(<FavoriteButton isFavorite={false} onToggle={onToggle} />);
     fireEvent.press(screen.getByTestId("favorite-button"));
-    expect(onToggle).not.toHaveBeenCalled();
-    const lottie = screen.getByTestId("favorite-lottie");
-    lottie.props.onAnimationFinish(false);
     expect(onToggle).toHaveBeenCalledTimes(1);
   });
 

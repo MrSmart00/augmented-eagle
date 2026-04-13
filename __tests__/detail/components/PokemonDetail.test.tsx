@@ -96,8 +96,6 @@ describe("PokemonDetail", () => {
       />,
     );
     fireEvent.press(screen.getByTestId("favorite-button"));
-    expect(onToggleFavorite).not.toHaveBeenCalled();
-    screen.getByTestId("favorite-lottie").props.onAnimationFinish(false);
     expect(onToggleFavorite).toHaveBeenCalledTimes(1);
   });
 
