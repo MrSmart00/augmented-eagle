@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react-native";
 import { DetailScreen } from "@/src/detail";
-import { FavoritesProvider } from "@/src/shared";
 import type { Pokemon } from "@/src/shared";
 
 const mockPokemon: Pokemon = {
@@ -43,12 +42,7 @@ jest.mock("@/src/detail/hooks/usePokemonSpeciesInfo", () => ({
   usePokemonSpeciesInfo: () => mockUsePokemonSpeciesInfo,
 }));
 
-const renderWithProvider = (id: string) =>
-  render(
-    <FavoritesProvider>
-      <DetailScreen id={id} />
-    </FavoritesProvider>,
-  );
+const renderWithProvider = (id: string) => render(<DetailScreen id={id} />);
 
 describe("DetailScreen", () => {
   beforeEach(() => {
