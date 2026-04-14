@@ -1,5 +1,18 @@
 {
   "worktree": {
-    "symlinkDirectories": ["node_modules"]
+    "symlinkDirectories": []
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pnpm install --frozen-lockfile",
+            "statusMessage": "Installing dependencies..."
+          }
+        ]
+      }
+    ]
   }
 }
