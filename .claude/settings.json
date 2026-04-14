@@ -1,5 +1,18 @@
 {
   "worktree": {
-    "symlinkDirectories": ["node_modules"]
+    "symlinkDirectories": []
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ ! -d node_modules ] || [ -L node_modules ]; then rm -f node_modules; pnpm install --frozen-lockfile; fi",
+            "statusMessage": "Checking dependencies..."
+          }
+        ]
+      }
+    ]
   }
 }
