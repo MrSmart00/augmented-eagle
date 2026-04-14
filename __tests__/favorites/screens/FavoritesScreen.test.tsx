@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react-native";
 import { FavoritesScreen } from "@/src/favorites";
-import { FavoritesProvider } from "@/src/shared";
 import type { PokemonSummary } from "@/src/shared";
 
 const mockUsePokemonByIds = {
@@ -27,12 +26,7 @@ jest.mock("expo-router", () => ({
   },
 }));
 
-const renderWithProvider = () =>
-  render(
-    <FavoritesProvider>
-      <FavoritesScreen />
-    </FavoritesProvider>,
-  );
+const renderWithProvider = () => render(<FavoritesScreen />);
 
 describe("FavoritesScreen", () => {
   beforeEach(() => {

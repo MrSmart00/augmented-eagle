@@ -1,6 +1,7 @@
 import { renderHook, act } from "@testing-library/react-native";
 import { Alert } from "react-native";
-import { FavoritesProvider, useFavorites } from "@/src/shared";
+import { useFavorites } from "@/src/shared";
+import { useFavoritesStore } from "@/src/shared/stores/useFavoritesStore";
 
 jest.mock("@/src/shared/i18n", () => ({
   i18n: {
@@ -10,23 +11,20 @@ jest.mock("@/src/shared/i18n", () => ({
 
 jest.spyOn(Alert, "alert").mockImplementation(() => {});
 
-describe("FavoritesContext", () => {
-  const wrapper = ({ children }: { children: React.ReactNode }) => (
-    <FavoritesProvider>{children}</FavoritesProvider>
-  );
-
+describe("useFavoritesStore", () => {
   beforeEach(() => {
+    useFavoritesStore.setState({ favoriteIds: [] });
     (Alert.alert as jest.Mock).mockClear();
   });
 
   describe("useFavorites", () => {
     it("初期状態ではお気に入りが空である", () => {
-      const { result } = renderHook(() => useFavorites(), { wrapper });
+      const { result } = renderHook(() => useFavorites());
       expect(result.current.favoriteIds).toEqual([]);
     });
 
     it("toggleFavoriteでポケモンをお気に入りに追加できる", () => {
-      const { result } = renderHook(() => useFavorites(), { wrapper });
+      const { result } = renderHook(() => useFavorites());
       act(() => {
         result.current.toggleFavorite(25);
       });
@@ -34,7 +32,7 @@ describe("FavoritesContext", () => {
     });
 
     it("toggleFavoriteで既にお気に入りのポケモンを削除できる", () => {
-      const { result } = renderHook(() => useFavorites(), { wrapper });
+      const { result } = renderHook(() => useFavorites());
       act(() => {
         result.current.toggleFavorite(25);
       });
@@ -45,7 +43,7 @@ describe("FavoritesContext", () => {
     });
 
     it("isFavoriteがお気に入り登録済みのポケモンに対してtrueを返す", () => {
-      const { result } = renderHook(() => useFavorites(), { wrapper });
+      const { result } = renderHook(() => useFavorites());
       act(() => {
         result.current.toggleFavorite(25);
       });
@@ -53,12 +51,12 @@ describe("FavoritesContext", () => {
     });
 
     it("isFavoriteが未登録のポケモンに対してfalseを返す", () => {
-      const { result } = renderHook(() => useFavorites(), { wrapper });
+      const { result } = renderHook(() => useFavorites());
       expect(result.current.isFavorite(25)).toBe(false);
     });
 
     it("お気に入りが6匹に達している場合、追加できずアラートが表示される", () => {
-      const { result } = renderHook(() => useFavorites(), { wrapper });
+      const { result } = renderHook(() => useFavorites());
       act(() => {
         result.current.toggleFavorite(1);
         result.current.toggleFavorite(2);
@@ -81,7 +79,7 @@ describe("FavoritesContext", () => {
     });
 
     it("上限に達していても既存のお気に入りは削除できる", () => {
-      const { result } = renderHook(() => useFavorites(), { wrapper });
+      const { result } = renderHook(() => useFavorites());
       act(() => {
         result.current.toggleFavorite(1);
         result.current.toggleFavorite(2);
@@ -99,7 +97,7 @@ describe("FavoritesContext", () => {
     });
 
     it("isFullが上限到達時にtrueを返す", () => {
-      const { result } = renderHook(() => useFavorites(), { wrapper });
+      const { result } = renderHook(() => useFavorites());
       expect(result.current.isFull).toBe(false);
 
       act(() => {
@@ -111,14 +109,6 @@ describe("FavoritesContext", () => {
         result.current.toggleFavorite(6);
       });
       expect(result.current.isFull).toBe(true);
-    });
-
-    it("Provider外でuseFavoritesを呼ぶとエラーになる", () => {
-      jest.spyOn(console, "error").mockImplementation(() => {});
-      expect(() => {
-        renderHook(() => useFavorites());
-      }).toThrow("useFavorites must be used within a FavoritesProvider");
-      jest.restoreAllMocks();
     });
   });
 });
