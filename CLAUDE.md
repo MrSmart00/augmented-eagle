@@ -39,6 +39,8 @@ describe('PokemonCard', () => {
 機能単位でモジュールを分離し、`index.ts`（バレルファイル）で公開APIを定義する。
 モジュール内ファイルへの直接importはESLintで禁止され、必ずバレル経由でアクセスする。
 
+設計判断の詳細は [ADR（Architecture Decision Records）](docs/adr/) を参照。
+
 ### ディレクトリ構成
 
 ```
