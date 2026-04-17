@@ -1,13 +1,13 @@
 import { renderHook, waitFor, act } from "@testing-library/react-native";
-import { usePokemonDetail } from "@/src/detail/hooks/usePokemonDetail";
 import { fetchPokemonDetail } from "@/src/detail/repository/pokemonDetailApi";
+import { usePokemonDetail } from "@/src/detail/hooks/usePokemonDetail";
 import type { Pokemon } from "@/src/shared";
 
 jest.mock("@/src/detail/repository/pokemonDetailApi");
 
-const mockFetch = fetchPokemonDetail as jest.MockedFunction<typeof fetchPokemonDetail>;
+const mockFetchDetail = fetchPokemonDetail as jest.MockedFunction<typeof fetchPokemonDetail>;
 
-const mockPokemon: Pokemon = {
+const mockScreenPokemon: Pokemon = {
   id: 25,
   name: "Pikachu",
   types: ["electric"],
@@ -29,88 +29,81 @@ const mockPokemon: Pokemon = {
 
 describe("usePokemonDetail", () => {
   beforeEach(() => {
-    mockFetch.mockReset();
+    mockFetchDetail.mockReset();
   });
 
   it("初期ロード時にisLoadingがtrueになる", () => {
-    mockFetch.mockReturnValue(new Promise(() => {}));
+    mockFetchDetail.mockReturnValue(new Promise(() => {}));
     const { result } = renderHook(() => usePokemonDetail(25));
-
     expect(result.current.isLoading).toBe(true);
     expect(result.current.pokemon).toBeNull();
   });
 
   it("データ取得後にポケモン詳細が設定される", async () => {
-    mockFetch.mockResolvedValueOnce(mockPokemon);
+    mockFetchDetail.mockResolvedValueOnce(mockScreenPokemon);
     const { result } = renderHook(() => usePokemonDetail(25));
-
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
     });
-
-    expect(result.current.pokemon).toEqual(mockPokemon);
-    expect(mockFetch).toHaveBeenCalledWith(25);
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.pokemon).toEqual(mockScreenPokemon);
+    expect(mockFetchDetail).toHaveBeenCalledWith(25);
   });
 
   it("エラー時にerror状態が設定される", async () => {
-    mockFetch.mockRejectedValueOnce(new Error("Not found"));
+    mockFetchDetail.mockRejectedValueOnce(new Error("Not found"));
     const { result } = renderHook(() => usePokemonDetail(25));
-
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
     });
-
+    expect(result.current.isLoading).toBe(false);
     expect(result.current.error).toBe("Not found");
     expect(result.current.pokemon).toBeNull();
   });
 
   it("Error以外のエラーでもerror状態が設定される", async () => {
-    mockFetch.mockRejectedValueOnce("string error");
+    mockFetchDetail.mockRejectedValueOnce("string error");
     const { result } = renderHook(() => usePokemonDetail(25));
-
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
     });
-
+    expect(result.current.isLoading).toBe(false);
     expect(result.current.error).toBe("Unknown error");
   });
 
   it("アンマウント後にデータ取得が完了しても状態が更新されない", async () => {
-    let resolve!: (value: Pokemon) => void;
-    mockFetch.mockReturnValue(new Promise<Pokemon>((r) => { resolve = r; }));
+    let resolve: (value: Pokemon) => void;
+    mockFetchDetail.mockReturnValue(new Promise<Pokemon>((r) => { resolve = r; }));
     const { result, unmount } = renderHook(() => usePokemonDetail(25));
-
     expect(result.current.isLoading).toBe(true);
     unmount();
-
-    await act(async () => { resolve(mockPokemon); });
-
+    await act(async () => { resolve!(mockScreenPokemon); });
     expect(result.current.pokemon).toBeNull();
     expect(result.current.isLoading).toBe(true);
   });
 
   it("IDが変わると再取得する", async () => {
-    mockFetch.mockResolvedValueOnce(mockPokemon);
+    mockFetchDetail.mockResolvedValueOnce(mockScreenPokemon);
     const { result, rerender } = renderHook(
       (props: { id: number }) => usePokemonDetail(props.id),
       { initialProps: { id: 25 } }
     );
-
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
     });
 
     const newPokemon: Pokemon = {
-      ...mockPokemon,
+      ...mockScreenPokemon,
       id: 1,
       name: "Bulbasaur",
       types: ["grass", "poison"],
     };
-    mockFetch.mockResolvedValueOnce(newPokemon);
+    mockFetchDetail.mockResolvedValueOnce(newPokemon);
     rerender({ id: 1 });
 
     await waitFor(() => {
       expect(result.current.pokemon).toEqual(newPokemon);
     });
+    expect(result.current.pokemon?.id).toBe(1);
   });
 });

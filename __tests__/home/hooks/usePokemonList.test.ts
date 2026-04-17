@@ -1,17 +1,17 @@
 import { renderHook, act, waitFor } from "@testing-library/react-native";
-import { usePokemonList } from "@/src/home/hooks/usePokemonList";
+import { usePokemonList } from "@/src/home";
 import { fetchPokemonListGraphQL } from "@/src/home/repository/pokemonGraphqlApi";
 import type { PokemonListResult } from "@/src/home/repository/pokemonGraphqlApi";
 
 jest.mock("@/src/home/repository/pokemonGraphqlApi");
 
-const mockFetch = fetchPokemonListGraphQL as jest.MockedFunction<
+const mockFetchGraphQL = fetchPokemonListGraphQL as jest.MockedFunction<
   typeof fetchPokemonListGraphQL
 >;
 
 const makePage = (
   offset: number,
-  totalCount: number,
+  totalCount: number
 ): PokemonListResult => ({
   count: totalCount,
   pokemon: [
@@ -22,18 +22,20 @@ const makePage = (
 
 describe("usePokemonList", () => {
   beforeEach(() => {
-    mockFetch.mockReset();
+    mockFetchGraphQL.mockReset();
   });
 
   it("初期ロード時にisLoadingがtrueになる", () => {
-    mockFetch.mockReturnValue(new Promise(() => {}));
+    mockFetchGraphQL.mockReturnValue(new Promise(() => {}));
+
     const { result } = renderHook(() => usePokemonList());
 
     expect(result.current.isLoading).toBe(true);
   });
 
   it("データ取得後にポケモン一覧が設定される", async () => {
-    mockFetch.mockResolvedValueOnce(makePage(0, 40));
+    mockFetchGraphQL.mockResolvedValueOnce(makePage(0, 40));
+
     const { result } = renderHook(() => usePokemonList());
 
     await waitFor(() => {
@@ -47,27 +49,31 @@ describe("usePokemonList", () => {
   });
 
   it("言語パラメータがGraphQL関数に渡される", async () => {
-    mockFetch.mockResolvedValueOnce(makePage(0, 40));
+    mockFetchGraphQL.mockResolvedValueOnce(makePage(0, 40));
+
     renderHook(() => usePokemonList());
 
     await waitFor(() => {
-      expect(mockFetch).toHaveBeenCalledWith(20, 0, "ja");
+      expect(mockFetchGraphQL).toHaveBeenCalled();
     });
+
+    expect(mockFetchGraphQL).toHaveBeenCalledWith(20, 0, "ja");
   });
 
   it("loadMoreで追加データが追加される", async () => {
-    mockFetch.mockResolvedValueOnce(makePage(0, 40));
+    mockFetchGraphQL.mockResolvedValueOnce(makePage(0, 40));
+
     const { result } = renderHook(() => usePokemonList());
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
     });
 
-    mockFetch.mockResolvedValueOnce(makePage(20, 40));
+    mockFetchGraphQL.mockResolvedValueOnce(makePage(20, 40));
+
     await act(async () => {
       result.current.loadMore();
     });
-
     await waitFor(() => {
       expect(result.current.isLoadingMore).toBe(false);
     });
@@ -76,7 +82,8 @@ describe("usePokemonList", () => {
   });
 
   it("総件数に達した場合hasMoreがfalseになる", async () => {
-    mockFetch.mockResolvedValueOnce(makePage(0, 2));
+    mockFetchGraphQL.mockResolvedValueOnce(makePage(0, 2));
+
     const { result } = renderHook(() => usePokemonList());
 
     await waitFor(() => {
@@ -87,7 +94,8 @@ describe("usePokemonList", () => {
   });
 
   it("hasMoreがfalseの場合loadMoreは何もしない", async () => {
-    mockFetch.mockResolvedValueOnce(makePage(0, 2));
+    mockFetchGraphQL.mockResolvedValueOnce(makePage(0, 2));
+
     const { result } = renderHook(() => usePokemonList());
 
     await waitFor(() => {
@@ -98,33 +106,35 @@ describe("usePokemonList", () => {
       result.current.loadMore();
     });
 
-    expect(mockFetch).toHaveBeenCalledTimes(1);
+    expect(mockFetchGraphQL).toHaveBeenCalledTimes(1);
   });
 
   it("refreshでデータがリセットされる", async () => {
-    mockFetch.mockResolvedValueOnce(makePage(0, 40));
+    mockFetchGraphQL.mockResolvedValueOnce(makePage(0, 40));
+
     const { result } = renderHook(() => usePokemonList());
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
     });
 
-    mockFetch.mockResolvedValueOnce(makePage(0, 40));
+    mockFetchGraphQL.mockResolvedValueOnce(makePage(0, 40));
+
     await act(async () => {
       result.current.refresh();
     });
-
     await waitFor(() => {
       expect(result.current.isRefreshing).toBe(false);
     });
 
     expect(result.current.pokemon).toHaveLength(2);
-    expect(mockFetch).toHaveBeenCalledTimes(2);
-    expect(mockFetch).toHaveBeenLastCalledWith(20, 0, "ja");
+    expect(mockFetchGraphQL).toHaveBeenCalledTimes(2);
+    expect(mockFetchGraphQL).toHaveBeenLastCalledWith(20, 0, "ja");
   });
 
   it("エラー時にerror状態が設定される", async () => {
-    mockFetch.mockRejectedValueOnce(new Error("Network error"));
+    mockFetchGraphQL.mockRejectedValueOnce(new Error("Network error"));
+
     const { result } = renderHook(() => usePokemonList());
 
     await waitFor(() => {
@@ -135,7 +145,8 @@ describe("usePokemonList", () => {
   });
 
   it("初期ロードでError以外のエラーでもerror状態が設定される", async () => {
-    mockFetch.mockRejectedValueOnce("string error");
+    mockFetchGraphQL.mockRejectedValueOnce("string error");
+
     const { result } = renderHook(() => usePokemonList());
 
     await waitFor(() => {
@@ -146,18 +157,19 @@ describe("usePokemonList", () => {
   });
 
   it("loadMoreでError以外のエラーでもerror状態が設定される", async () => {
-    mockFetch.mockResolvedValueOnce(makePage(0, 40));
+    mockFetchGraphQL.mockResolvedValueOnce(makePage(0, 40));
+
     const { result } = renderHook(() => usePokemonList());
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
     });
 
-    mockFetch.mockRejectedValueOnce("string error");
+    mockFetchGraphQL.mockRejectedValueOnce("string error");
+
     await act(async () => {
       result.current.loadMore();
     });
-
     await waitFor(() => {
       expect(result.current.isLoadingMore).toBe(false);
     });

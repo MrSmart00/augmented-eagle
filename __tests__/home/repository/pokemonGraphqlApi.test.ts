@@ -1,6 +1,4 @@
-import {
-  fetchPokemonListGraphQL,
-} from "@/src/home/repository/pokemonGraphqlApi";
+import { fetchPokemonListGraphQL } from "@/src/home/repository/pokemonGraphqlApi";
 
 const mockGraphQLResponse = {
   data: {
@@ -22,9 +20,7 @@ const mockGraphQLResponse = {
           name: "charmander",
           pokemon_v2_pokemonspeciesnames: [{ name: "ヒトカゲ" }],
         },
-        pokemon_v2_pokemontypes: [
-          { pokemon_v2_type: { name: "fire" } },
-        ],
+        pokemon_v2_pokemontypes: [{ pokemon_v2_type: { name: "fire" } }],
       },
     ],
     pokemon_v2_pokemon_aggregate: {
@@ -42,9 +38,7 @@ const mockEmptyNameResponse = {
           name: "bulbasaur",
           pokemon_v2_pokemonspeciesnames: [],
         },
-        pokemon_v2_pokemontypes: [
-          { pokemon_v2_type: { name: "grass" } },
-        ],
+        pokemon_v2_pokemontypes: [{ pokemon_v2_type: { name: "grass" } }],
       },
     ],
     pokemon_v2_pokemon_aggregate: {
@@ -55,15 +49,15 @@ const mockEmptyNameResponse = {
 
 const originalFetch = globalThis.fetch;
 
-beforeEach(() => {
-  globalThis.fetch = jest.fn();
-});
-
-afterEach(() => {
-  globalThis.fetch = originalFetch;
-});
-
 describe("fetchPokemonListGraphQL", () => {
+  beforeEach(() => {
+    globalThis.fetch = jest.fn();
+  });
+
+  afterEach(() => {
+    globalThis.fetch = originalFetch;
+  });
+
   it("GraphQLエンドポイントにPOSTリクエストを送信する", async () => {
     (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
@@ -77,7 +71,7 @@ describe("fetchPokemonListGraphQL", () => {
       expect.objectContaining({
         method: "POST",
         headers: { "Content-Type": "application/json" },
-      }),
+      })
     );
   });
 
@@ -114,14 +108,14 @@ describe("fetchPokemonListGraphQL", () => {
     expect(result.pokemon[0].name).toBe("Bulbasaur");
   });
 
-  it("HTTPエラー時にエラーをスローする", async () => {
+  it("HTTPエラー時にGraphQLエラーをスローする", async () => {
     (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
       ok: false,
       status: 500,
     });
 
     await expect(fetchPokemonListGraphQL(20, 0, "ja")).rejects.toThrow(
-      "GraphQL request failed: 500",
+      "GraphQL request failed: 500"
     );
   });
 
@@ -135,7 +129,7 @@ describe("fetchPokemonListGraphQL", () => {
     });
 
     await expect(fetchPokemonListGraphQL(20, 0, "ja")).rejects.toThrow(
-      "GraphQL error: Field not found",
+      "GraphQL error: Field not found"
     );
   });
 });

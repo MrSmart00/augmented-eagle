@@ -1,6 +1,7 @@
 import { fetchPokemonDetail } from "@/src/detail/repository/pokemonDetailApi";
+import type { Pokemon } from "@/src/shared";
 
-const mockApiResponse = {
+const mockDetailApiResponse = {
   id: 25,
   name: "pikachu",
   types: [
@@ -24,36 +25,26 @@ const mockApiResponse = {
 
 const originalFetch = globalThis.fetch;
 
-beforeEach(() => {
-  globalThis.fetch = jest.fn();
-});
+describe("pokemonDetailApi", () => {
+  afterEach(() => {
+    globalThis.fetch = originalFetch;
+  });
 
-afterEach(() => {
-  globalThis.fetch = originalFetch;
-});
-
-describe("fetchPokemonDetail", () => {
   it("正しいURLでfetchを呼び出す", async () => {
-    (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
+    globalThis.fetch = jest.fn().mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve(mockApiResponse),
+      json: () => Promise.resolve(mockDetailApiResponse),
     });
-
     await fetchPokemonDetail(25);
-
-    expect(globalThis.fetch).toHaveBeenCalledWith(
-      "https://pokeapi.co/api/v2/pokemon/25"
-    );
+    expect(globalThis.fetch).toHaveBeenCalledWith("https://pokeapi.co/api/v2/pokemon/25");
   });
 
   it("レスポンスからステータスを正しく変換する", async () => {
-    (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
+    globalThis.fetch = jest.fn().mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve(mockApiResponse),
+      json: () => Promise.resolve(mockDetailApiResponse),
     });
-
     const result = await fetchPokemonDetail(25);
-
     expect(result.stats).toEqual([
       { name: "hp", baseStat: 35 },
       { name: "attack", baseStat: 55 },
@@ -65,25 +56,21 @@ describe("fetchPokemonDetail", () => {
   });
 
   it("身長と体重を正しく変換する", async () => {
-    (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
+    globalThis.fetch = jest.fn().mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve(mockApiResponse),
+      json: () => Promise.resolve(mockDetailApiResponse),
     });
-
     const result = await fetchPokemonDetail(25);
-
     expect(result.height).toBe(4);
     expect(result.weight).toBe(60);
   });
 
   it("とくせいを正しく変換する", async () => {
-    (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
+    globalThis.fetch = jest.fn().mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve(mockApiResponse),
+      json: () => Promise.resolve(mockDetailApiResponse),
     });
-
     const result = await fetchPokemonDetail(25);
-
     expect(result.abilities).toEqual([
       { name: "static", isHidden: false },
       { name: "lightning-rod", isHidden: true },
@@ -91,35 +78,28 @@ describe("fetchPokemonDetail", () => {
   });
 
   it("名前がキャピタライズされる", async () => {
-    (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
+    globalThis.fetch = jest.fn().mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve(mockApiResponse),
+      json: () => Promise.resolve(mockDetailApiResponse),
     });
-
     const result = await fetchPokemonDetail(25);
-
     expect(result.name).toBe("Pikachu");
   });
 
   it("タイプが正しく変換される", async () => {
-    (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
+    globalThis.fetch = jest.fn().mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve(mockApiResponse),
+      json: () => Promise.resolve(mockDetailApiResponse),
     });
-
     const result = await fetchPokemonDetail(25);
-
     expect(result.types).toEqual(["electric"]);
   });
 
   it("HTTPエラー時にエラーをスローする", async () => {
-    (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
+    globalThis.fetch = jest.fn().mockResolvedValueOnce({
       ok: false,
       status: 404,
     });
-
-    await expect(fetchPokemonDetail(99999)).rejects.toThrow(
-      "Failed to fetch pokemon detail: 404"
-    );
+    await expect(fetchPokemonDetail(99999)).rejects.toThrow("Failed to fetch pokemon detail: 404");
   });
 });

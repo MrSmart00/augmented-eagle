@@ -20,17 +20,60 @@ GitHub Issues #1〜#5に各Stepの仕様が定義されている。
 2. **Green** — テストが通る最小限の実装を書く
 3. **Refactor** — コードを整理する（テストが通ることを確認しながら）
 
-### テストの書き方（BDDスタイル）
+### テストの書き方（Cucumber BDDスタイル）
 
-- `describe` で機能・コンポーネント名を記述
-- `it` で振る舞いを日本語で記述
-- テストは `__tests__/` ディレクトリに配置
+テストは2層構成:
+- **BDD Feature（画面・コンポーネント）**: jest-cucumber で Gherkin（.feature）+ ステップ定義
+- **Unit Test（ロジック）**: 従来の describe/it 形式で hooks / domain / repository をテスト
+
+#### ファイル配置
+
+```
+__tests__/
+  <module>/
+    screens/                        # BDD Feature（画面・コンポーネント表示テスト）
+      <module>Screen.feature        #   Gherkin仕様
+      <module>Screen.steps.tsx      #   ステップ定義
+    domain/                         # Unit Test（ドメインロジック）
+    hooks/                          # Unit Test（カスタムフック）
+    repository/                     # Unit Test（API呼び出し）
+```
+
 - **`app/` ディレクトリにテストを置かないこと**（Expo Routerがルートとして認識するため）
 
+#### .feature ファイルの書き方
+
+- キーワードは英語（Feature/Scenario/Given/When/Then/And）、説明文は日本語で記述
+- 同じロジックに複数の入力パターンがある場合は `Scenario Outline:` + `Examples:` テーブルを使う
+
+```gherkin
+Feature: ポケモンリストアイテムの変換
+
+  Scenario Outline: URLからポケモンIDを抽出する
+    Given PokeAPIのURL "<url>" が与えられている
+    When URLからIDを抽出する
+    Then IDは <id> である
+
+    Examples:
+      | url                                    | id |
+      | https://pokeapi.co/api/v2/pokemon/25/  | 25 |
+```
+
+#### ステップ定義の書き方
+
+- `loadFeature()` で .feature を読み込み、`defineFeature()` でステップを定義
+- インポートは `@/src/<module>` 経由（バレルファイル経由のルール維持）
+
 ```typescript
-describe('PokemonCard', () => {
-  it('ポケモンの名前が表示される', () => { ... });
-  it('タイプバッジが色分けされて表示される', () => { ... });
+import { defineFeature, loadFeature } from "jest-cucumber";
+import { extractPokemonId } from "@/src/home";
+
+const feature = loadFeature("__tests__/home/features/pokemonListItem.feature");
+
+defineFeature(feature, (test) => {
+  test("URLからポケモンIDを抽出する", ({ given, when, then }) => {
+    // given/when/then でステップを実装
+  });
 });
 ```
 

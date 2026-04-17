@@ -1,9 +1,10 @@
 import { renderHook, act } from "@testing-library/react-native";
-import { useFloatingSearch } from "@/src/home/hooks/useFloatingSearch";
+import { useFloatingSearch } from "@/src/home";
 
 describe("useFloatingSearch", () => {
-  it("初期状態でisExpandedがfalse", () => {
+  it("初期状態でisExpandedがfalseである", () => {
     const { result } = renderHook(() => useFloatingSearch());
+
     expect(result.current.isExpanded).toBe(false);
   });
 
@@ -27,11 +28,11 @@ describe("useFloatingSearch", () => {
     act(() => {
       result.current.toggle();
     });
-    expect(result.current.isExpanded).toBe(true);
 
     act(() => {
       result.current.close();
     });
+
     expect(result.current.isExpanded).toBe(false);
   });
 
@@ -41,11 +42,13 @@ describe("useFloatingSearch", () => {
     act(() => {
       result.current.close();
     });
+
     expect(result.current.isExpanded).toBe(false);
   });
 
   it("アニメーションスタイルを返す", () => {
     const { result } = renderHook(() => useFloatingSearch());
+
     expect(result.current.fabAnimatedStyle).toBeDefined();
     expect(result.current.iconAnimatedStyle).toBeDefined();
     expect(result.current.inputAnimatedStyle).toBeDefined();

@@ -1,7 +1,7 @@
-import { fetchPokemonList } from "@/src/home/repository/pokemonApi";
-import type { PokeApiListResponse } from "@/src/home/domain/pokemonListItem";
+import { fetchPokemonList } from "@/src/home";
+import type { PokeApiListResponse } from "@/src/home";
 
-const mockResponse: PokeApiListResponse = {
+const mockRestResponse: PokeApiListResponse = {
   count: 1302,
   next: "https://pokeapi.co/api/v2/pokemon?offset=20&limit=20",
   previous: null,
@@ -13,19 +13,19 @@ const mockResponse: PokeApiListResponse = {
 
 const originalFetch = globalThis.fetch;
 
-beforeEach(() => {
-  globalThis.fetch = jest.fn();
-});
-
-afterEach(() => {
-  globalThis.fetch = originalFetch;
-});
-
 describe("fetchPokemonList", () => {
+  beforeEach(() => {
+    globalThis.fetch = jest.fn();
+  });
+
+  afterEach(() => {
+    globalThis.fetch = originalFetch;
+  });
+
   it("正しいURLでfetchを呼び出す", async () => {
     (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve(mockResponse),
+      json: () => Promise.resolve(mockRestResponse),
     });
 
     await fetchPokemonList(20, 0);
@@ -38,12 +38,11 @@ describe("fetchPokemonList", () => {
   it("レスポンスをパースして返す", async () => {
     (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve(mockResponse),
+      json: () => Promise.resolve(mockRestResponse),
     });
 
     const result = await fetchPokemonList(20, 0);
-
-    expect(result).toEqual(mockResponse);
+    expect(result).toEqual(mockRestResponse);
   });
 
   it("HTTPエラー時にエラーをスローする", async () => {
