@@ -22,18 +22,21 @@ GitHub Issues #1〜#5に各Stepの仕様が定義されている。
 
 ### テストの書き方（Cucumber BDDスタイル）
 
-新規テストは **jest-cucumber** を使い、Gherkin（.feature）+ ステップ定義で記述する。
-既存の `describe/it` 形式テストは段階的に移行する。
+テストは2層構成:
+- **BDD Feature（画面・コンポーネント）**: jest-cucumber で Gherkin（.feature）+ ステップ定義
+- **Unit Test（ロジック）**: 従来の describe/it 形式で hooks / domain / repository をテスト
 
 #### ファイル配置
 
 ```
 __tests__/
   <module>/
-    features/           # .feature ファイル（Gherkin仕様）
-      <name>.feature
-    steps/              # ステップ定義
-      <name>.steps.ts(x)
+    screens/                        # BDD Feature（画面・コンポーネント表示テスト）
+      <module>Screen.feature        #   Gherkin仕様
+      <module>Screen.steps.tsx      #   ステップ定義
+    domain/                         # Unit Test（ドメインロジック）
+    hooks/                          # Unit Test（カスタムフック）
+    repository/                     # Unit Test（API呼び出し）
 ```
 
 - **`app/` ディレクトリにテストを置かないこと**（Expo Routerがルートとして認識するため）
